@@ -1,0 +1,413 @@
+h2p_row;h2p_label;h2p_value;param_id;param_descript1;param_descript2;scale_function;norm_function
+0;/*@Meta;;;;;;
+1;;;;;;;
+2;Author:;;;;;;
+3;'DeepDiva';;;;;;
+4;;;;;;;
+5;Categories:;;;;;;
+6;'Other:Initialize, Other:Templates';;;;;;
+7;;;;;;;
+8;*/;;;;;;
+9;;;;;;;
+10;#AM;Diva;;;;;
+11;#Vers;10001;;;;;
+12;#Endian;little;;;;;
+13;#nm;24;;;;;
+14;#ms;none;;;;;
+15;#ms;ModWhl;;;;;
+16;#ms;PitchW;;;;;
+17;#ms;CtrlA;;;;;
+18;#ms;CtrlB;;;;;
+19;#ms;Gate;;;;;
+20;#ms;Velocity;;;;;
+21;#ms;Pressure;;;;;
+22;#ms;KeyFollow;;;;;
+23;#ms;KeyFollow2;;;;;
+24;#ms;Alternate;;;;;
+25;#ms;Random;;;;;
+26;#ms;StackVoice;;;;;
+27;#ms;VoiceMap;;;;;
+28;#ms;Env1;;;;;
+29;#ms;Env2;;;;;
+30;#ms;LFO1;;;;;
+31;#ms;LFO2;;;;;
+32;#ms;Rectify;;;;;
+33;#ms;Invert;;;;;
+34;#ms;Quant;;;;;
+35;#ms;Lag;;;;;
+36;#ms;Adder;;;;;
+37;#ms;Multiply;;;;;
+38;#NV;2;;;;;
+39;#mv;Gate;;;;;
+40;#mv;Env1;;;;;
+41;#cm;main;;;;;
+42;CcOp;150.00;0; main; Output;scale_float_0_200;norm_float_0_200
+43;#FX1;0;1;main;Active #FX1;scale_int_0_1;norm_int_0_1
+44;#FX2;0;2;main;Active #FX2;scale_int_0_1;norm_int_0_1
+45;#cm;PCore;;;;;
+46;SBase;4;;;;;
+47;Swing;0.00;;;;;
+48;STrig;1;;;;;
+49;PFold;0;;;;;
+50;PFile;1;;;;;
+51;Rev;9709;;;;;
+52;LED;0.00;3; PCore; LED Colour;scale_placeholder;norm_placeholder
+53;MidiA;2;;;;;
+54;MidiP;3;;;;;
+55;DFold;4;;;;;
+56;#cm;CLK;;;;;
+57;Mult;100.00;256; CLK; Multiply;scale_placeholder;norm_placeholder
+58;Base;2;257; CLK; TimeBase;scale_placeholder;norm_placeholder
+59;Swing;0.00;258; CLK; Swing;scale_placeholder;norm_placeholder
+60;Strict;1;;;;;
+61;#cm;ARP;;;;;
+62;Dir;1;259; ARP; Direction;scale_placeholder;norm_placeholder
+63;Oct;1;260; ARP; Octaves;scale_placeholder;norm_placeholder
+64;CDiv;0;261; ARP; Multiply;scale_placeholder;norm_placeholder
+65;Rstrt;0;262; ARP; Restart;scale_placeholder;norm_placeholder
+66;OnOff;0;263; ARP; OnOff;scale_placeholder;norm_placeholder
+67;Order;0;271; ARP; Order;scale_placeholder;norm_placeholder
+68;#cm;VCC;;;;;
+69;Voices;4;4; VCC; Voices;scale_placeholder;norm_placeholder
+70;Voicing;1;5; VCC; Voice Stack;scale_placeholder;norm_placeholder
+71;Mode;0;6; VCC; Mode;scale_placeholder;norm_placeholder
+72;PortaM;0;7; VCC; GlideMode;scale_placeholder;norm_placeholder
+73;Porta;0.00;8; VCC; Glide;scale_placeholder;norm_placeholder
+74;Porta2;0.00;9; VCC; Glide2;scale_placeholder;norm_placeholder
+75;PRange;100.00;10; VCC; GlideRange;scale_placeholder;norm_placeholder
+76;PB;2;11; VCC; PitchBend Up;scale_placeholder;norm_placeholder
+77;PBD;2;12; VCC; PitchBend Down;scale_placeholder;norm_placeholder
+78;Drft;0;;;;;
+79;MTunS;0;13; VCC; TuningMode;scale_placeholder;norm_placeholder
+80;MTunN;5;;;;;
+81;MTunT;6;;;;;
+82;Trsp;0;14; VCC; Transpose;scale_placeholder;norm_placeholder
+83;FTun;0.00;15; VCC; FineTuneCents;scale_placeholder;norm_placeholder
+84;Vc1;0.00;;;;;
+85;Vc2;0.00;;;;;
+86;Vc3;0.00;;;;;
+87;Vc4;0.00;;;;;
+88;Vc5;0.00;;;;;
+89;Vc6;0.00;;;;;
+90;Vc7;0.00;;;;;
+91;Vc8;0.00;;;;;
+92;Prior;0;16; VCC; Note Priority;scale_placeholder;norm_placeholder
+93;ContEn;1;;;;;
+94;#cm;OPT;;;;;
+95;V1T1;0.00;;;;;
+96;V2T1;-5.59;;;;;
+97;V3T1;-2.85;;;;;
+98;V4T1;10.00;;;;;
+99;V5T1;10.00;;;;;
+100;V6T1;-4.88;;;;;
+101;V7T1;-5.80;;;;;
+102;V8T1;0.68;;;;;
+103;V1T2;50.61;;;;;
+104;V2T2;100.00;;;;;
+105;V3T2;28.41;;;;;
+106;V4T2;20.98;;;;;
+107;V5T2;64.40;;;;;
+108;V6T2;59.47;;;;;
+109;V7T2;0.00;;;;;
+110;V8T2;76.13;;;;;
+111;V1T3;-100.00;;;;;
+112;V2T3;-19.06;;;;;
+113;V3T3;-9.78;;;;;
+114;V4T3;-71.16;;;;;
+115;V5T3;-57.69;;;;;
+116;V6T3;0.00;;;;;
+117;V7T3;-82.29;;;;;
+118;V8T3;-60.02;;;;;
+119;TSlop;35.00;20; OPT; TuneSlop;scale_placeholder;norm_placeholder
+120;TPots;7;;;;;
+121;RndC;0;;;;;
+122;CSlop;10.00;21; OPT; CutoffSlop;scale_placeholder;norm_placeholder
+123;RndG;0;;;;;
+124;GSlop;10.00;22; OPT; GlideSlop;scale_placeholder;norm_placeholder
+125;RndP;0;;;;;
+126;PSlop;1.00;23; OPT; PWSlop;scale_placeholder;norm_placeholder
+127;RndE;0;;;;;
+128;ESlop;10.00;24; OPT; EnvrateSlop;scale_placeholder;norm_placeholder
+129;V1Mod;0.00;25; OPT; V1Mod;scale_placeholder;norm_placeholder
+130;V2Mod;0.00;26; OPT; V2Mod;scale_placeholder;norm_placeholder
+131;V3Mod;0.00;27; OPT; V3Mod;scale_placeholder;norm_placeholder
+132;V4Mod;0.00;28; OPT; V4Mod;scale_placeholder;norm_placeholder
+133;V5Mod;0.00;29; OPT; V5Mod;scale_placeholder;norm_placeholder
+134;V6Mod;0.00;30; OPT; V6Mod;scale_placeholder;norm_placeholder
+135;V7Mod;0.00;31; OPT; V7Mod;scale_placeholder;norm_placeholder
+136;V8Mod;0.00;32; OPT; V8Mod;scale_placeholder;norm_placeholder
+137;TransM;0;;;;;
+138;#cm;ENV1;;;;;
+139;Atk;1.00;33; ENV1; Attack;scale_float_0_100;norm_float_0_100
+140;Dec;100.00;34; ENV1; Decay;scale_float_0_100;norm_float_0_100
+141;Sus;100.00;35; ENV1; Sustain;scale_float_0_100;norm_float_0_100
+142;Rel;0.00;36; ENV1; Release;scale_float_0_100;norm_float_0_100
+143;Vel;0.00;37; ENV1; Velocity;scale_float_0_100;norm_float_0_100
+144;Model;1;38; ENV1; Model;scale_int_0_2;norm_int_0_2
+145;Trig;0;39; ENV1; Trigger;scale_placeholder;norm_placeholder
+146;Quant;0;40; ENV1; Quantise;scale_placeholder;norm_placeholder
+147;Crve;0;41; ENV1; Curve;scale_placeholder;norm_placeholder
+148;RelOn;0;42; ENV1; Release On;scale_placeholder;norm_placeholder
+149;KeyFlw;0.00;43; ENV1; KeyFollow;scale_float_0_100;norm_float_0_100
+150;#cm;ENV2;;;;;
+151;Atk;1.00;44; ENV2; Attack;scale_float_0_100;norm_float_0_100
+152;Dec;50.00;45; ENV2; Decay;scale_float_0_100;norm_float_0_100
+153;Sus;0.00;46; ENV2; Sustain;scale_float_0_100;norm_float_0_100
+154;Rel;20.00;47; ENV2; Release;scale_float_0_100;norm_float_0_100
+155;Vel;0.00;48; ENV2; Velocity;scale_float_0_100;norm_float_0_100
+156;Model;1;49; ENV2; Model;scale_int_0_2;norm_int_0_2
+157;Trig;0;50; ENV2; Trigger;scale_placeholder;norm_placeholder
+158;Quant;0;51; ENV2; Quantise;scale_placeholder;norm_placeholder
+159;Crve;0;52; ENV2; Curve;scale_placeholder;norm_placeholder
+160;RelOn;0;53; ENV2; Release On;scale_placeholder;norm_placeholder
+161;KeyFlw;0.00;54; ENV2; KeyFollow;scale_float_0_100;norm_float_0_100
+162;#cm;LFO1;;;;;
+163;Sync;-2;55; LFO1; Sync;scale_placeholder;norm_placeholder
+164;Trig;1;56; LFO1; Restart;scale_placeholder;norm_placeholder
+165;Wave;1;57; LFO1; Waveform;scale_placeholder;norm_placeholder
+166;Phse;0.00;58; LFO1; Phase;scale_placeholder;norm_placeholder
+167;Polar;0;272; LFO1; Polarity;scale_placeholder;norm_placeholder
+168;Dly;0.00;59; LFO1; Delay;scale_placeholder;norm_placeholder
+169;DMS1;1;60; LFO1; DepthMod Src1;scale_placeholder;norm_placeholder
+170;DMD1;100.00;61; LFO1; DepthMod Dpt1;scale_placeholder;norm_placeholder
+171;Rate;0.00;62; LFO1; Rate;scale_placeholder;norm_placeholder
+172;FMS1;0;63; LFO1; FreqMod Src1;scale_placeholder;norm_placeholder
+173;FMD1;0.00;64; LFO1; FreqMod Dpt;scale_placeholder;norm_placeholder
+174;#cm;LFO2;;;;;
+175;Sync;-2;65; LFO2; Sync;scale_placeholder;norm_placeholder
+176;Trig;1;66; LFO2; Restart;scale_placeholder;norm_placeholder
+177;Wave;1;67; LFO2; Waveform;scale_placeholder;norm_placeholder
+178;Phse;0.00;68; LFO2; Phase;scale_placeholder;norm_placeholder
+179;Polar;0;273; LFO2; Polarity;scale_placeholder;norm_placeholder
+180;Dly;0.00;69; LFO2; Delay;scale_placeholder;norm_placeholder
+181;DMS1;0;70; LFO2; DepthMod Src1;scale_placeholder;norm_placeholder
+182;DMD1;0.00;71; LFO2; DepthMod Dpt1;scale_placeholder;norm_placeholder
+183;Rate;0.00;72; LFO2; Rate;scale_placeholder;norm_placeholder
+184;FMS1;0;73; LFO2; FreqMod Src1;scale_placeholder;norm_placeholder
+185;FMD1;0.00;74; LFO2; FreqMod Dpt;scale_placeholder;norm_placeholder
+186;#cm;MOD;;;;;
+187;Quant;2.00;75; MOD; Quantise;scale_placeholder;norm_placeholder
+188;Slew;50.00;76; MOD; Slew Rate;scale_placeholder;norm_placeholder
+189;RSrc;0;77; MOD; RectifySource;scale_placeholder;norm_placeholder
+190;ISrc;0;78; MOD; InvertSource;scale_placeholder;norm_placeholder
+191;QSrc;0;79; MOD; QuantiseSource;scale_placeholder;norm_placeholder
+192;LSrc;0;80; MOD; LagSource;scale_placeholder;norm_placeholder
+193;A1Src;0;81; MOD; AddSource1;scale_placeholder;norm_placeholder
+194;A2Src;0;82; MOD; AddSource2;scale_placeholder;norm_placeholder
+195;M1Src;0;83; MOD; MulSource1;scale_placeholder;norm_placeholder
+196;M2Src;0;84; MOD; MulSource2;scale_placeholder;norm_placeholder
+197;#cm;OSC;;;;;
+198;Model;3;85; OSC; Model;scale_int_0_4;norm_int_0_4
+199;Tune1;0.00;86; OSC; Tune1;scale_fixed_octave;norm_fixed_octave
+200;Tune2;0.00;87; OSC; Tune2;scale_float_30_30;norm_float_30_30
+201;Tune3;0.00;88; OSC; Tune3;scale_placeholder;norm_placeholder
+202;VtoD;0.00;89; OSC; Vibrato;scale_placeholder;norm_placeholder
+203;PW;50.00;90; OSC; PulseWidth;scale_float_0_100;norm_float_0_100
+204;Shape1;5.00;91; OSC; Shape1;scale_placeholder;norm_placeholder
+205;Shape2;5.00;92; OSC; Shape2;scale_placeholder;norm_placeholder
+206;Shape3;5.00;93; OSC; Shape3;scale_placeholder;norm_placeholder
+207;FM;0.00;94; OSC; FM;scale_placeholder;norm_placeholder
+208;Sync2;0;95; OSC; Sync2;scale_placeholder;norm_placeholder
+209;OscMix;100.00;96; OSC; OscMix;scale_placeholder;norm_placeholder
+210;Vol1;50.00;97; OSC; Volume1;scale_float_0_100;norm_float_0_100
+211;Vol2;0.00;98; OSC; Volume2;scale_float_0_100;norm_float_0_100
+212;Vol3;0.00;99; OSC; Volume3;scale_placeholder;norm_placeholder
+213;PWShp;1;100; OSC; PulseShape;scale_placeholder;norm_placeholder
+214;SawShp;0;101; OSC; SawShape;scale_placeholder;norm_placeholder
+215;SubShp;0;102; OSC; SuboscShape;scale_placeholder;norm_placeholder
+216;TM1Src;15;103; OSC; Tune1ModSrc;scale_int_0_22;norm_int_0_22
+217;TM1Dpt;0.00;104; OSC; Tune1ModDepth;scale_float_24_24;norm_float_24_24
+218;TM2Src;17;105; OSC; Tune2ModSrc;scale_int_0_22;norm_int_0_22
+219;TM2Dpt;0.00;106; OSC; Tune2ModDepth;scale_float_24_24;norm_float_24_24
+220;PWMSrc;0;107; OSC; PWModSrc;scale_placeholder;norm_placeholder
+221;PWMDpt;0.00;108; OSC; PWModDepth;scale_placeholder;norm_placeholder
+222;Sh1Src;0;109; OSC; ShapeSrc;scale_placeholder;norm_placeholder
+223;Sh1Dpt;0.00;110; OSC; ShapeDepth;scale_placeholder;norm_placeholder
+224;Tri1;0;111; OSC; Triangle1On;scale_placeholder;norm_placeholder
+225;Sin2;0;112; OSC; Sine2On;scale_placeholder;norm_placeholder
+226;Saw1;1;113; OSC; Saw1On;scale_placeholder;norm_placeholder
+227;PWM1;0;114; OSC; Pwm1On;scale_placeholder;norm_placeholder
+228;Tri2;0;115; OSC; Triangle2On;scale_placeholder;norm_placeholder
+229;Saw2;1;116; OSC; Saw2On;scale_placeholder;norm_placeholder
+230;PW2;0;117; OSC; Pulse2On;scale_placeholder;norm_placeholder
+231;PWM2;1;118; OSC; PWM2On;scale_placeholder;norm_placeholder
+232;Noise1;0;119; OSC; Noise1On;scale_placeholder;norm_placeholder
+233;triSp;1;120; OSC; ShapeModel;scale_placeholder;norm_placeholder
+234;Sync3;0;121; OSC; Sync3;scale_placeholder;norm_placeholder
+235;Noise;0.00;122; OSC; NoiseVol;scale_placeholder;norm_placeholder
+236;NoiseC;0;123; OSC; NoiseColor;scale_placeholder;norm_placeholder
+237;TM1On;0;124; OSC; TuneModOsc1;scale_placeholder;norm_placeholder
+238;TM2On;0;125; OSC; TuneModOsc2;scale_placeholder;norm_placeholder
+239;TM3On;0;126; OSC; TuneModOsc3;scale_placeholder;norm_placeholder
+240;SM1On;0;127; OSC; ShapeModOsc1;scale_placeholder;norm_placeholder
+241;SM2On;0;128; OSC; ShapeModOsc2;scale_placeholder;norm_placeholder
+242;SM3On;0;129; OSC; ShapeModOsc3;scale_placeholder;norm_placeholder
+243;TMmode;0;130; OSC; TuneModMode;scale_placeholder;norm_placeholder
+244;Wave1;2.00;131; OSC; EcoWave1;scale_int_1_4;norm_int_1_4
+245;Wave2;2.00;132; OSC; EcoWave2;scale_int_1_4;norm_int_1_4
+246;RMPwm;0;133; OSC; RingmodPulse;scale_placeholder;norm_placeholder
+247;Drift;35.00;134; OSC; Drift;scale_placeholder;norm_placeholder
+248;FmSrc;0;135; OSC; FmModSrc;scale_placeholder;norm_placeholder
+249;FmDpt;0.00;136; OSC; FmModDepth;scale_placeholder;norm_placeholder
+250;NoisSrc;0;137; OSC; NoiseVolModSrc;scale_placeholder;norm_placeholder
+251;NoisDpt;0.00;138; OSC; NoiseVolModDepth;scale_placeholder;norm_placeholder
+252;JpSp1;1;;;;;
+253;JpSp2;1;;;;;
+254;BpNoise;1;;;;;
+255;RstPh1;0.00;;;;;
+256;RstPh2;0.00;;;;;
+257;RstPh3;0.00;;;;;
+258;DgtlTp1;0;278; OSC; DigitalType1;scale_placeholder;norm_placeholder
+259;DgtlSp2;0.00;264; OSC; DigitalShape2;scale_placeholder;norm_placeholder
+260;DgtlTp2;0;279; OSC; DigitalType2;scale_placeholder;norm_placeholder
+261;DgtlSp3;50.00;265; OSC; DigitalShape3;scale_placeholder;norm_placeholder
+262;DgtlSp4;0.00;266; OSC; DigitalShape4;scale_placeholder;norm_placeholder
+263;DNoAlia;0;280; OSC; DigitalAntiAlias;scale_placeholder;norm_placeholder
+264;#cm;HPF;;;;;
+265;Model;3;139; HPF; Model;scale_int_0_3;norm_int_0_3
+266;Freq;30.00;140; HPF; Frequency;scale_float_30_150;norm_float_30_150
+267;Res;50.00;141; HPF; Resonance;scale_float_0_100;norm_float_0_100
+268;Rev;1;142; HPF; Revision;scale_int_1_2;norm_int_1_2
+269;KeyScl;0.00;143; HPF; KeyFollow;scale_placeholder;norm_placeholder
+270;FMSrc;15;144; HPF; FreqModSrc;scale_int_0_22;norm_int_0_22
+271;FMDpt;0.00;145; HPF; FreqModDepth;scale_float_120_120;norm_float_120_120
+272;PFreq;-1;146; HPF; Post-HPF Freq;scale_placeholder;norm_placeholder
+273;#cm;VCF1;;;;;
+274;Model;3;147; VCF1; Model;scale_float_0_4;norm_float_0_4
+275;Freq;147.00;148; VCF1; Frequency;scale_float_0_150;norm_float_0_150
+276;Res;0.00;149; VCF1; Resonance;scale_float_0_100;norm_float_0_100
+277;FMSrc;15;150; VCF1; FreqModSrc;scale_int_0_22;norm_int_0_22
+278;FMDpt;0.00;151; VCF1; FreqModDepth;scale_float_120_120;norm_float_120_120
+279;FM2Src;17;152; VCF1; FreqMod2Src;scale_int_0_22;norm_int_0_22
+280;FM2Dpt;0.00;153; VCF1; FreqMod2Depth;scale_float_120_120;norm_float_120_120
+281;KeyScl;0.00;154; VCF1; KeyFollow;scale_float_0_100;norm_float_0_100
+282;FFM;0.00;155; VCF1; FilterFM;scale_float_24_24;norm_float_24_24
+283;LMode;0;156; VCF1; LadderMode;scale_placeholder;norm_placeholder
+284;LColor;1;157; VCF1; LadderColor;scale_placeholder;norm_placeholder
+285;SkRev;1;158; VCF1; SlnKyRevision;scale_int_1_2;norm_int_1_2
+286;SvfMode;0;159; VCF1; SvfMode;scale_placeholder;norm_placeholder
+287;Fback;0.00;160; VCF1; Feedback;scale_placeholder;norm_placeholder
+288;ResSrc;0;161; VCF1; ResModSrc;scale_placeholder;norm_placeholder
+289;ResDpt;0.00;162; VCF1; ResModDepth;scale_placeholder;norm_placeholder
+290;FfmSrc;0;163; VCF1; FmAmountModSrc;scale_placeholder;norm_placeholder
+291;FfmDpt;0.00;164; VCF1; FmAmountModDepth;scale_placeholder;norm_placeholder
+292;FbSrc;0;165; VCF1; FeedbackModSrc;scale_placeholder;norm_placeholder
+293;FbDpt;0.00;166; VCF1; FeedbackModDepth;scale_placeholder;norm_placeholder
+294;InTune;1;;;;;
+295;ShpMix;0.00;267; VCF1; ShapeMix;scale_placeholder;norm_placeholder
+296;SMSrc;17;268; VCF1; ShapeModSrc;scale_placeholder;norm_placeholder
+297;SMDpt;0.00;269; VCF1; ShapeModDepth;scale_placeholder;norm_placeholder
+298;BpUbie;0;270; VCF1; UhbieBandpass;scale_placeholder;norm_placeholder
+299;#cm;VCA1;;;;;
+300;Pan;0.00;167; VCA1; Pan;scale_placeholder;norm_placeholder
+301;Vol;50.00;168; VCA1; Volume;scale_placeholder;norm_placeholder
+302;VCA;1;169; VCA1; VCA;scale_placeholder;norm_placeholder
+303;ModSrc;0;170; VCA1; Modulation;scale_placeholder;norm_placeholder
+304;ModDpt;0.00;171; VCA1; ModDepth;scale_placeholder;norm_placeholder
+305;PanSrc;17;172; VCA1; PanModulation;scale_placeholder;norm_placeholder
+306;PanDpt;0.00;173; VCA1; PanModDepth;scale_placeholder;norm_placeholder
+307;Mode;0;174; VCA1; Mode;scale_placeholder;norm_placeholder
+308;Offset;-0.12;175; VCA1; Offset;scale_placeholder;norm_placeholder
+309;#cm;Scope1;;;;;
+310;Mode;0;;;;;
+311;frq;-5.00;176; Scope1; Frequency;scale_placeholder;norm_placeholder
+312;scl;0.00;177; Scope1; Scale;scale_placeholder;norm_placeholder
+313;Inp;0;;;;;
+314;cs1;0.00;;;;;
+315;cs2;0.00;;;;;
+316;pc;0;;;;;
+317;Mod;0;;;;;
+318;#cm;FX1;;;;;
+319;Module;'Chorus1';178; FX1; Module;scale_placeholder;norm_placeholder
+320;#cm;Chrs1;;;;;
+321;Type;0;179; Chrs1; Type;scale_placeholder;norm_placeholder
+322;Rate;50.00;180; Chrs1; Rate;scale_placeholder;norm_placeholder
+323;Depth;50.00;181; Chrs1; Depth;scale_placeholder;norm_placeholder
+324;Wet;100.00;182; Chrs1; Wet;scale_placeholder;norm_placeholder
+325;#cm;Phase1;;;;;
+326;Type;0;183; Phase1; Type;scale_placeholder;norm_placeholder
+327;Rate;50.00;184; Phase1; Rate;scale_placeholder;norm_placeholder
+328;FB;0.00;185; Phase1; Feedback;scale_placeholder;norm_placeholder
+329;Stereo;0.00;186; Phase1; Stereo;scale_placeholder;norm_placeholder
+330;Sync;0;187; Phase1; Sync;scale_placeholder;norm_placeholder
+331;Phase;0.00;188; Phase1; Phase;scale_placeholder;norm_placeholder
+332;Wet;100.00;189; Phase1; Wet;scale_placeholder;norm_placeholder
+333;Depth;100.00;274; Phase1; Depth;scale_placeholder;norm_placeholder
+334;Center;50.00;275; Phase1; Center;scale_placeholder;norm_placeholder
+335;#cm;Plate1;;;;;
+336;Pre;0.00;190; Plate1; PreDelay;scale_placeholder;norm_placeholder
+337;Diff;100.00;191; Plate1; Diffusion;scale_placeholder;norm_placeholder
+338;Damp;80.00;192; Plate1; Damp;scale_placeholder;norm_placeholder
+339;Decay;50.00;193; Plate1; Decay;scale_placeholder;norm_placeholder
+340;Size;150.00;194; Plate1; Size;scale_placeholder;norm_placeholder
+341;Dry;90.00;195; Plate1; Dry;scale_placeholder;norm_placeholder
+342;Wet;40.00;196; Plate1; Wet;scale_placeholder;norm_placeholder
+343;#cm;Delay1;;;;;
+344;LDel;2.00;197; Delay1; Left Delay;scale_placeholder;norm_placeholder
+345;CDel;4.00;198; Delay1; Center Delay;scale_placeholder;norm_placeholder
+346;RDel;4.00;199; Delay1; Right Delay;scale_placeholder;norm_placeholder
+347;SVol;20.00;200; Delay1; Side Vol;scale_placeholder;norm_placeholder
+348;CVol;0.00;201; Delay1; Center Vol;scale_placeholder;norm_placeholder
+349;FeedB;25.00;202; Delay1; Feedback;scale_placeholder;norm_placeholder
+350;HP;0.00;203; Delay1; HP;scale_placeholder;norm_placeholder
+351;LP;100.00;204; Delay1; LP;scale_placeholder;norm_placeholder
+352;Dry;100.00;205; Delay1; Dry;scale_placeholder;norm_placeholder
+353;Wow;50.00;206; Delay1; Wow;scale_placeholder;norm_placeholder
+354;#cm;Rtary1;;;;;
+355;Mode;0;207; Rtary1; Mode;scale_placeholder;norm_placeholder
+356;Mix;100.00;208; Rtary1; Mix;scale_placeholder;norm_placeholder
+357;Bal;50.00;209; Rtary1; Balance;scale_placeholder;norm_placeholder
+358;Drive;0.00;210; Rtary1; Drive;scale_placeholder;norm_placeholder
+359;Stereo;100.00;211; Rtary1; Stereo;scale_placeholder;norm_placeholder
+360;Out;0.00;212; Rtary1; Out;scale_placeholder;norm_placeholder
+361;Slow;30.00;213; Rtary1; Slow;scale_placeholder;norm_placeholder
+362;Fast;85.00;214; Rtary1; Fast;scale_placeholder;norm_placeholder
+363;RTime;50.00;215; Rtary1; RiseTime;scale_placeholder;norm_placeholder
+364;Cont;0;216; Rtary1; Controller;scale_placeholder;norm_placeholder
+365;#cm;FX2;;;;;
+366;Module;'Delay2';217; FX2; Module;scale_placeholder;norm_placeholder
+367;#cm;Chrs2;;;;;
+368;Type;0;218; Chrs2; Type;scale_placeholder;norm_placeholder
+369;Rate;50.00;219; Chrs2; Rate;scale_placeholder;norm_placeholder
+370;Depth;50.00;220; Chrs2; Depth;scale_placeholder;norm_placeholder
+371;Wet;100.00;221; Chrs2; Wet;scale_placeholder;norm_placeholder
+372;#cm;Phase2;;;;;
+373;Type;0;222; Phase2; Type;scale_placeholder;norm_placeholder
+374;Rate;50.00;223; Phase2; Rate;scale_placeholder;norm_placeholder
+375;FB;0.00;224; Phase2; Feedback;scale_placeholder;norm_placeholder
+376;Stereo;0.00;225; Phase2; Stereo;scale_placeholder;norm_placeholder
+377;Sync;0;226; Phase2; Sync;scale_placeholder;norm_placeholder
+378;Phase;0.00;227; Phase2; Phase;scale_placeholder;norm_placeholder
+379;Wet;100.00;228; Phase2; Wet;scale_placeholder;norm_placeholder
+380;Depth;100.00;276; Phase2; Depth;scale_placeholder;norm_placeholder
+381;Center;50.00;277; Phase2; Center;scale_placeholder;norm_placeholder
+382;#cm;Plate2;;;;;
+383;Pre;0.00;229; Plate2; PreDelay;scale_placeholder;norm_placeholder
+384;Diff;100.00;230; Plate2; Diffusion;scale_placeholder;norm_placeholder
+385;Damp;80.00;231; Plate2; Damp;scale_placeholder;norm_placeholder
+386;Decay;50.00;232; Plate2; Decay;scale_placeholder;norm_placeholder
+387;Size;150.00;233; Plate2; Size;scale_placeholder;norm_placeholder
+388;Dry;90.00;234; Plate2; Dry;scale_placeholder;norm_placeholder
+389;Wet;40.00;235; Plate2; Wet;scale_placeholder;norm_placeholder
+390;#cm;Delay2;;;;;
+391;LDel;2.00;236; Delay2; Left Delay;scale_placeholder;norm_placeholder
+392;CDel;4.00;237; Delay2; Center Delay;scale_placeholder;norm_placeholder
+393;RDel;4.00;238; Delay2; Right Delay;scale_placeholder;norm_placeholder
+394;SVol;20.00;239; Delay2; Side Vol;scale_placeholder;norm_placeholder
+395;CVol;0.00;240; Delay2; Center Vol;scale_placeholder;norm_placeholder
+396;FeedB;25.00;241; Delay2; Feedback;scale_placeholder;norm_placeholder
+397;HP;0.00;242; Delay2; HP;scale_placeholder;norm_placeholder
+398;LP;100.00;243; Delay2; LP;scale_placeholder;norm_placeholder
+399;Dry;100.00;244; Delay2; Dry;scale_placeholder;norm_placeholder
+400;Wow;50.00;245; Delay2; Wow;scale_placeholder;norm_placeholder
+401;#cm;Rtary2;;;;;
+402;Mode;0;246; Rtary2; Mode;scale_placeholder;norm_placeholder
+403;Mix;100.00;247; Rtary2; Mix;scale_placeholder;norm_placeholder
+404;Bal;50.00;248; Rtary2; Balance;scale_placeholder;norm_placeholder
+405;Drive;0.00;249; Rtary2; Drive;scale_placeholder;norm_placeholder
+406;Stereo;100.00;250; Rtary2; Stereo;scale_placeholder;norm_placeholder
+407;Out;0.00;251; Rtary2; Out;scale_placeholder;norm_placeholder
+408;Slow;30.00;252; Rtary2; Slow;scale_placeholder;norm_placeholder
+409;Fast;85.00;253; Rtary2; Fast;scale_placeholder;norm_placeholder
+410;RTime;50.00;254; Rtary2; RiseTime;scale_placeholder;norm_placeholder
+411;Cont;0;255; Rtary2; Controller;scale_placeholder;norm_placeholder
