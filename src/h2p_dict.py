@@ -27,7 +27,7 @@ def build(starting_row: int, h2p_index: int, df: pd.DataFrame):
 
         h2p_index += 1
 
-        h2p_dict_clean = {k: {k2: ' ' if pd.isna(v2) else v2 for k2, v2 in v.items()} for k, v in h2p_dict.items()}
+        h2p_dict_clean = {k: {k2: None if pd.isna(v2) else v2 for k2, v2 in v.items()} for k, v in h2p_dict.items()}
 
     return h2p_dict_clean
 
