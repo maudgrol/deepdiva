@@ -1,5 +1,5 @@
 def norm_placeholder(x):
-    return x
+    return 0
 
 def norm_float_0_100(x):
     return x/100
