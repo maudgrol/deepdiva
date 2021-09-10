@@ -1,3 +1,6 @@
+def scale_placeholder(x):
+    return x
+
 def scale_float_0_100(x):
     return x*100
 
