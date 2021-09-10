@@ -1,10 +1,12 @@
 import os
 import numpy as np
 import pandas as pd
-import re
+import pickle
 
 from norm_functions import *
 from scale_functions import *
+
+DATA_PATH = "../data/"
 
 norm_dict = {0: norm_float_0_200,
              1: norm_int_0_1,
@@ -288,6 +290,14 @@ norm_dict = {0: norm_float_0_200,
              279: norm_placeholder,
              280: norm_placeholder}
 
+# Save dictionary with normalization functions
+with open(os.path.join(DATA_PATH, "normalize_dict.pickle"), 'wb') as handle:
+    pickle.dump(norm_dict, handle, protocol=pickle.HIGHEST_PROTOCOL)
+
+with open(os.path.join(DATA_PATH, "normalize_dict.pickle"), 'rb') as handle:
+    norm_dict = pickle.load(handle)
+
+
 scale_dict = {0: scale_float_0_200,
              1: scale_int_0_1,
              2: scale_int_0_1,
@@ -570,6 +580,12 @@ scale_dict = {0: scale_float_0_200,
              279: scale_placeholder,
              280: scale_placeholder}
 
+# Save dictionary with scaling functions
+with open(os.path.join(DATA_PATH, "scaling_dict.pickle"), 'wb') as handle:
+    pickle.dump(scale_dict, handle, protocol=pickle.HIGHEST_PROTOCOL)
+
+with open(os.path.join(DATA_PATH, "scaling_dict.pickle"), 'rb') as handle:
+    scale_dict = pickle.load(handle)
 
 
 def patch_transform(function_dict:dict, patch):
@@ -579,8 +595,7 @@ def patch_transform(function_dict:dict, patch):
 
     return transformed_patch
 
-# Get test patch
-DATA_PATH = "../data/"
+# Get test patch to test patch_transform function
 testParams = np.load(os.path.join(DATA_PATH, "data_mfcc/test_patches.npy"))
 patch = testParams[0]
 
