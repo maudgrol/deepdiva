@@ -38,6 +38,12 @@ h2p_dict = build(STARTING_ROW, H2P_INDEX, df)
 with open(os.path.join(DATA_PATH, "h2p_dict.json"), 'w') as fp:
     json.dump(h2p_dict, fp)
 
+# Load h2p dictionary template
+with open(os.path.join(DATA_PATH, "h2p_dict.json") as f:
+  h2p_dict = json.load(f)
+
+
+# Load test patch for update function
 testParams = np.load(os.path.join(DATA_PATH, "data_mfcc/test_patches.npy"))
 patch = testParams[0]
 
