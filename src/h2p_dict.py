@@ -39,7 +39,7 @@ with open(os.path.join(DATA_PATH, "h2p_dict.json"), 'w') as fp:
     json.dump(h2p_dict, fp)
 
 # Load h2p dictionary template
-with open(os.path.join(DATA_PATH, "h2p_dict.json") as f:
+with open(os.path.join(DATA_PATH, "h2p_dict.json")) as f:
   h2p_dict = json.load(f)
 
 
