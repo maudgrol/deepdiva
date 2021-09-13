@@ -20,7 +20,7 @@ with open(os.path.join(DATA_PATH, "scaling_dict.pickle"), 'rb') as handle:
     scale_dict = pickle.load(handle)
 
 # Load h2p dictionary template
-with open(os.path.join(DATA_PATH, "h2p_dict.json")) as f:
+with open(os.path.join(DATA_PATH, "h2p_template.json")) as f:
   parameter_dictionary = json.load(f)
 
 header_dictionary = {
