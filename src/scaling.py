@@ -597,18 +597,18 @@ with open(os.path.join(DATA_PATH, "scaling_dict.pickle"), 'wb') as handle:
 with open(os.path.join(DATA_PATH, "scaling_dict.pickle"), 'rb') as handle:
     scale_dict = pickle.load(handle)
 
-#
-# def patch_transform(function_dict:dict, patch):
-#     patch_df = pd.DataFrame(patch).transpose()
-#     transformed_patch = patch_df.agg(function_dict)
-#     transformed_patch = transformed_patch.transpose().to_numpy().flatten()
-#
-#     return transformed_patch
-#
-# # Get test patch to test patch_transform function
-# testParams = np.load(os.path.join(DATA_PATH, "data_mfcc/test_patches.npy"))
-# patch = testParams[0]
-#
-# normalized_patch = patch_transform(norm_dict, patch)
-# scaled_patch = patch_transform(scale_dict, patch)
+
+def patch_transform(function_dict:dict, patch):
+    patch_df = pd.DataFrame(patch).transpose()
+    transformed_patch = patch_df.agg(function_dict)
+    transformed_patch = transformed_patch.transpose().to_numpy().flatten()
+
+    return transformed_patch
+
+# Get test patch to test patch_transform function
+testParams = np.load(os.path.join(DATA_PATH, "data_mfcc/test_patches.npy"))
+patch = testParams[0]
+
+normalized_patch = patch_transform(norm_dict, patch)
+scaled_patch = patch_transform(scale_dict, patch)
 
