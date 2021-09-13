@@ -16,6 +16,9 @@ def scale_float_0_150(x):
 def scale_float_0_200(x):
     return x*200
 
+def scale_float_0_250(x):
+    return x*250
+
 def scale_float_1_9(x):
     return (x*8)+1
 

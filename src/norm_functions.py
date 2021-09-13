@@ -16,6 +16,9 @@ def norm_float_0_150(x):
 def norm_float_0_200(x):
     return x/200
 
+def norm_float_0_250(x):
+    return x/250
+
 def norm_float_1_9(x):
     return (x-1)/8
 
