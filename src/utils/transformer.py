@@ -11,6 +11,13 @@ from utils.dictionaries import *
 norm_dict = get_norm_dict()
 scale_dict = get_scale_dict()
 
+DEFAULT_HEADER = {
+    "Bank": "Diva Factory Best Of",
+    "Author": "Bronto Scorpio",
+    "Description": "push the modulation wheel",
+    "Usage": "MW = filter\\r\\nAT = vibrato"
+}
+
 
 def patch_transform(function_dict:dict, patch):
     patch_df = pd.DataFrame(patch).transpose()
@@ -20,15 +27,6 @@ def patch_transform(function_dict:dict, patch):
     return transformed_patch
 
 
-import os
-import numpy as np
-import pandas as pd
-# import spiegelib as spgl
-
-from utils.dictionaries import *
-from utils.scale_functions import *
-from utils.transformer import patch_transform
-
 
 def preset_to_patch(h2p_filename, normal=True):
     # Load function dictionaries
@@ -36,12 +34,6 @@ def preset_to_patch(h2p_filename, normal=True):
     scale_dict = get_scale_dict()
     parameter_dict = get_row_to_parameter_dict()
 
-    header_dictionary = {
-        "Bank": "Diva Factory Best Of",
-        "Author": "Bronto Scorpio",
-        "Description": "push the modulation wheel",
-        "Usage": "MW = filter\\r\\nAT = vibrato"
-    }
 
     # function that checks if there is a string in there
     def h2p_raw_to_h2p_param(file):
@@ -128,3 +120,25 @@ def preset_to_patch(h2p_filename, normal=True):
         elif normal == 0:
             return non_normal
 
+
+def patch_to_preset(parameter_dictionary, filename, header_dictionary=DEFAULT_HEADER):
+
+    with open(f"{filename}.h2p", "w") as f:
+
+        # write header
+        f.write("/*@Meta")
+        f.write("\n\n")
+        for header in header_dictionary.keys():
+            f.write(f"{header}:")
+            f.write("\n")
+            f.write(f"'{header_dictionary[header]}'")
+            f.write("\n\n")
+        f.write("*/")
+        f.write("\n\n")
+
+        # write parameters
+        for index in parameter_dictionary.keys():
+            label = parameter_dictionary[index]["label"]
+            value = parameter_dictionary[index]["value"]
+            f.write(f"{label}={value}")
+            f.write("\n")
