@@ -1,4 +1,5 @@
-ROW_TO_PARAMETER_INDEX = {'32': 0,
+def get_row_to_parameter_dict():
+    return              {'32': 0,
                          '33': 1,
                          '34': 2,
                          '42': 3,
@@ -277,7 +278,8 @@ ROW_TO_PARAMETER_INDEX = {'32': 0,
                          '400': 254,
                          '401': 255}
 
-NORM_DICT = {0: norm_float_0_200,
+def get_norm_dict():
+    return {0: norm_float_0_200,
              1: norm_int_0_1,
              2: norm_int_0_1,
              3: norm_float_0_1,
@@ -559,7 +561,8 @@ NORM_DICT = {0: norm_float_0_200,
              279: norm_int_0_6,
              280: norm_int_0_1}
 
-SCALE_DICT = {0: scale_float_0_200,
+def get_scale_dict():
+    return  {0: scale_float_0_200,
              1: scale_int_0_1,
              2: scale_int_0_1,
              3: scale_float_0_1,
