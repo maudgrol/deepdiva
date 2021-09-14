@@ -1,4 +1,4 @@
-import os
+import copy
 import numpy as np
 import pandas as pd
 
@@ -8,8 +8,10 @@ from utils.dictionaries import *
 
 #DATA_PATH = "../../data/"
 
+# dictionaries
 norm_dict = get_norm_dict()
 scale_dict = get_scale_dict()
+parameter_index_to_h2p_tag_list = get_parameter_index_to_h2p_tag_list()
 
 DEFAULT_HEADER = {
     "Bank": "Diva Factory Best Of",
@@ -18,15 +20,12 @@ DEFAULT_HEADER = {
     "Usage": "MW = filter\\r\\nAT = vibrato"
 }
 
-
 def patch_transform(function_dict:dict, patch):
     patch_df = pd.DataFrame(patch).transpose()
     transformed_patch = patch_df.agg(function_dict)
     transformed_patch = transformed_patch.transpose().to_numpy().flatten()
 
     return transformed_patch
-
-
 
 def preset_to_patch(h2p_filename, normal=True):
     # Load function dictionaries
@@ -120,10 +119,17 @@ def preset_to_patch(h2p_filename, normal=True):
         elif normal == 0:
             return non_normal
 
+def patch_to_preset(patch, filename, header_dictionary=DEFAULT_HEADER):
 
-def patch_to_preset(parameter_dictionary, filename, header_dictionary=DEFAULT_HEADER):
+    ######### MIGHT NEED TO LOOK INTO THIS CODE FOR ORDERING ISSUES
+    patch_values = [x[1] for x in patch]
+    normalized_patch_values = patch_transform(scale_dict, patch_values)
 
-    with open(f"{filename}.h2p", "w") as f:
+    new_patch = [(x[0], normalized_patch_values[i]) for i, x in enumerate(patch)]
+    patch_dict = dict(new_patch)
+    #########
+
+    with open(filename, "w") as f:
 
         # write header
         f.write("/*@Meta")
@@ -136,9 +142,16 @@ def patch_to_preset(parameter_dictionary, filename, header_dictionary=DEFAULT_HE
         f.write("*/")
         f.write("\n\n")
 
+        # update the parameter dictionary values
+        h2p_parameter_list = copy.deepcopy(parameter_index_to_h2p_tag_list)
+        for index, h2p_parameter in enumerate(h2p_parameter_list):
+            if h2p_parameter["parameter_index"] != None:
+                patch_value = patch_dict[h2p_parameter["parameter_index"]]
+                h2p_parameter_list[index]['value'] = patch_value
+
         # write parameters
-        for index in parameter_dictionary.keys():
-            label = parameter_dictionary[index]["label"]
-            value = parameter_dictionary[index]["value"]
+        for entry in h2p_parameter_list:
+            label = entry["label"]
+            value = entry["value"]
             f.write(f"{label}={value}")
             f.write("\n")
