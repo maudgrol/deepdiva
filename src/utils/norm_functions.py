@@ -97,6 +97,9 @@ def norm_int_1_2(x):
 def norm_int_1_4(x):
     return (x-1) /3
 
+def norm_int_m3_23(x):
+    return (x+3) /26
+
 def norm_int_3_23(x):
     return (x-3) /20
 

@@ -133,6 +133,12 @@ def scale_int_1_4(x):
         res = 4
     return res
 
+def scale_int_m3_23(x):
+    res = int(27 * x)-3
+    if res == 24:
+        res = 23
+    return res
+
 def scale_int_3_23(x):
     res = int(21 * x)+3
     if res == 24:
