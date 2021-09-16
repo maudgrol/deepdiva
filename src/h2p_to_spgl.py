@@ -1,13 +1,9 @@
 import os
 import numpy as np
-import pandas as pd
 import pickle
 import json
-import spiegelib as spgl
 
-from norm_functions import *
-from scale_functions import *
-from scaling import patch_transform
+from deepdiva.src.utils.scaling import patch_transform
 
 DATA_PATH = "../data/"
 VST_PATH = "/Library/Audio/Plug-Ins/VST/u-he/Diva.vst"
@@ -362,7 +358,7 @@ def h2p_file_to_h2p_parameters_dictionary(file):
     return h2p_parameter_values
 
 
-with open(os.path.join(DATA_PATH, "h2p_example.h2p")) as file:
+with open(os.path.join(DATA_PATH, "MS-REV1_deepdiva.h2p")) as file:
     # put h2p parameters into a list of tuples
     h2p_row_values = h2p_file_to_h2p_parameters_dictionary(file)
     # remove string parameters
@@ -401,17 +397,17 @@ with open(os.path.join(DATA_PATH, "h2p_example.h2p")) as file:
 
     #     non_normal = [(x[0], x[1]) for x in sorted_h2p_row_parameter_index]
 
-normalized_patch
+#print(normalized_patch)
+#print(len(normalized_patch))
 
+#synth = spgl.synth.SynthVST(VST_PATH,
+ #                          note_length_secs=1.0,
+  #                         render_length_secs=4.0)
 
-synth = spgl.synth.SynthVST(VST_PATH,
-                            note_length_secs=1.0,
-                            render_length_secs=4.0)
-
-synth.set_patch(normalized_patch)
-synth.render_patch()
-audio = synth.get_audio()
-audio.save(os.path.join(DATA_PATH, "audio_test.wav"), normalize=False)
+#synth.set_patch(normalized_patch)
+#synth.render_patch()
+#audio = synth.get_audio()
+#audio.save(os.path.join(DATA_PATH, "audio_test.wav"), normalize=False)
 
 
 

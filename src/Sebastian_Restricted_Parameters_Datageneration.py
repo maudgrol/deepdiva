@@ -1,25 +1,6 @@
-from utils.transformer import preset_to_patch
+from utils.patch_utils import preset_to_patch
 import spiegelib as spgl
 
-def split_train_override_patch(patch, train_parameter_list):
-    '''This function takes a patch and a list of parameter indices and
-    returns 2 list of tuples: first a list containing only those tuples that are in the train_parameter_list,
-    and second a list of tuples with the remaining parameters
-    '''
-
-    #i use a set so that it is robust to a list that contains the same parameter twice (it will only erase it once)
-    plist = set(train_parameter_list)
-
-    #since lists are mutable i need to make a copy now using list() will help make a real copy
-    patch_copy = list(patch)
-
-    #i sort the list so that it start removing from left to right, otherwise the indexing would be wrong
-    for i, tuples in enumerate(sorted(plist)):
-        patch.remove(patch[tuples-i])
-
-    train_parameter_tuples = patch
-    override_parameter_tuples = list(set(patch_copy)-set(train_parameter_tuples))
-    return override_parameter_tuples, train_parameter_tuples
 
 
 # i want to use this patch for basic training
