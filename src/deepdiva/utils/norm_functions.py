@@ -1,3 +1,4 @@
+#!/usr/bin/env python
 def norm_placeholder(x):
     return 0
 
