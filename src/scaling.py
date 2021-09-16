@@ -6,10 +6,11 @@ import pickle
 from norm_functions import *
 from scale_functions import *
 
-DATA_PATH = "../data/"
+DATA_PATH = "../../data/"
 
 df = pd.read_csv(os.path.join(DATA_PATH, "mapping_parameters_5.csv"), sep=";", header=0)
 function_df = df.loc[pd.isna(df.param_id) == False, ["param_id", "scale_function", "norm_function"]]
+print(function_df)
 missing_df = pd.DataFrame(data=[[17,"scale_placeholder","norm_placeholder"],
                                 [18,"scale_placeholder","norm_placeholder"],
                                 [19,"scale_placeholder","norm_placeholder"]], columns=["param_id", "scale_function", "norm_function"])
@@ -606,9 +607,9 @@ def patch_transform(function_dict:dict, patch):
     return transformed_patch
 
 # Get test patch to test patch_transform function
-testParams = np.load(os.path.join(DATA_PATH, "data_mfcc/test_patches.npy"))
-patch = testParams[0]
+#testParams = np.load(os.path.join(DATA_PATH, "data_mfcc/test_patches.npy"))
+#patch = testParams[0]
 
-normalized_patch = patch_transform(norm_dict, patch)
-scaled_patch = patch_transform(scale_dict, patch)
+#normalized_patch = patch_transform(norm_dict, patch)
+#scaled_patch = patch_transform(scale_dict, patch)
 
