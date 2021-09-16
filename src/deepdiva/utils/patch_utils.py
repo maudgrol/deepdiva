@@ -1,8 +1,8 @@
-import numpy as np
-import pandas as pd
+#!/usr/bin/env python
+import copy
 
 
-def split_train_override_patch(patch, train_parameter_list):
+def split_train_override_patch(patch, train_parameter_list:list):
     """
     This function returns a list of tuples containing only those parameters that are in the train_parameter_list,
     and a second list of tuples with the overridden parameters
@@ -14,13 +14,14 @@ def split_train_override_patch(patch, train_parameter_list):
     # List of unique trainable parameters
     param_list = set(train_parameter_list)
 
-    # Create list from patch
-    patch_copy = list(patch)
+    # Create deep copies from original patch as to not edit original patch
+    temp_trainable = copy.deepcopy(patch)
+    temp_overridden = copy.deepcopy(patch)
 
-    #i sort the list so that it start removing from left to right, otherwise the indexing would be wrong
-    for i, tuples in enumerate(sorted(param_list)):
-        patch.remove(patch[tuples-i])
+    # Remove trainable parameters from list of overridden parameters (from last to first)
+    for element in sorted(param_list, reverse=True):
+        del temp_overridden[element]
 
-    train_parameter_tuples = patch
-    override_parameter_tuples = list(set(patch_copy)-set(train_parameter_tuples))
+    override_parameter_tuples = temp_overridden
+    train_parameter_tuples = list(set(temp_trainable)-set(override_parameter_tuples))
     return override_parameter_tuples, train_parameter_tuples
