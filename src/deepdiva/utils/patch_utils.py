@@ -6,7 +6,7 @@ def split_train_override_patch(patch, train_parameter_list:list):
     """
     This function returns a list of tuples containing only those parameters that are in the train_parameter_list,
     and a second list of tuples with the overridden parameters
-    :param patch:
+    :param patch: original patch - list of tuples
     :param train_parameter_list: list of trainable parameters (parameter IDs)
     :return: Two lists of tuples: overridden parameters, trainable parameters
     """
