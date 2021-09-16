@@ -1,3 +1,4 @@
+#!/usr/bin/env python
 def scale_placeholder(x):
     return x
 
