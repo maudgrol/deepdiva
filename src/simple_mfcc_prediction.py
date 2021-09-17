@@ -2,12 +2,12 @@ from tensorflow.keras import models
 import spiegelib as spgl
 from utils.patch_utils import *
 
-PATH = "../small_data3"
+PATH = "../small_data4/"
 BASE_PATCH = "../data/MS-REV1_deepdiva.h2p"
 PARAMETERS_TO_RANDOMIZE = [86, 131, 148, 149]
-SOUND_TO_PREDICT_PARAMETERS_FROM = f'{PATH}predict_this.wav"
+SOUND_TO_PREDICT_PARAMETERS_FROM = f"{PATH}predict_this.wav"
 
-#get a sound we want to use to predict its features...
+#get a sound we want to use to predict the parameters from and extract its features...
 features = spgl.features.MFCC(num_mfccs=13, frame_size=2048,
                               hop_size=1024, time_major=True)
 features.load_scaler(f"{PATH}data_scaler.pkl")
@@ -28,7 +28,7 @@ model = models.load_model(f"{PATH}model_linear")
 prediction = model.predict(audio_mfcc)[0].astype("float64")
 
 #join the predicted parameters with the overridden ones
-randomized_parameters = [86, 131, 148, 149] #in the end these will basically be all the numbers from 0 to 280
+randomized_parameters = [86, 131, 148, 149]
 pred = list(zip(randomized_parameters, prediction))
 
 base_patch = preset_to_patch("../data/MS-REV1_deepdiva.h2p")

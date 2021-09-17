@@ -1,9 +1,10 @@
 import numpy as np
 import matplotlib.pyplot as plt
+from tensorflow.keras import models, layers
 
 #i use a dataset train = 10000, test=1000, only 4 knobs randomized.
 
-PATH = "../small_data3/"
+PATH = "../small_data4/"
 
 #leave these as they are if you didnt change the simple_mfcc_datagenerator
 FEATURES = f"{PATH}train_0_features.npy"
@@ -19,9 +20,6 @@ X_test = np.expand_dims(np.load(TEST_FEATURES), axis=-1)
 y_test = np.load(TEST_TARGET)
 print(X.shape)
 
-
-from tensorflow.keras import models, layers
-
 model = models.Sequential()
 model.add(layers.Conv2D(4, (3, 3), activation="relu", padding="same", input_shape=(44, 13, 1)))
 model.add(layers.MaxPooling2D((2,2)))
@@ -32,7 +30,6 @@ model.add(layers.Dense(64, activation="relu"))
 model.add(layers.Dense(4, activation="linear"))
 
 model.summary()
-
 
 model.compile(
     optimizer="adam",
