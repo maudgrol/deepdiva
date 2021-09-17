@@ -4,6 +4,8 @@ import matplotlib.pyplot as plt
 #i use a dataset train = 10000, test=1000, only 4 knobs randomized.
 
 PATH = "../small_data3/"
+
+#leave these as they are if you didnt change the simple_mfcc_datagenerator
 FEATURES = f"{PATH}train_0_features.npy"
 TARGET = f"{PATH}train_0_patches.npy"
 TEST_FEATURES  = f"{PATH}test_0_features.npy"
@@ -27,14 +29,14 @@ model.add(layers.Conv2D(4, (3, 3), activation="relu", padding="same"))
 model.add(layers.MaxPooling2D((2,2)))
 model.add(layers.Flatten())
 model.add(layers.Dense(64, activation="relu"))
-model.add(layers.Dense(4, activation="sigmoid"))
+model.add(layers.Dense(4, activation="linear"))
 
 model.summary()
 
 
 model.compile(
     optimizer="adam",
-    loss="mean_squared_error",
+    loss="mean_squared_error",  #euclidean_distance_loss
     metrics=["accuracy"]
 )
 
@@ -42,7 +44,7 @@ history = model.fit( X, y,
     epochs=200, validation_data=(X_test, y_test)
     )
 
-model.save(f'{PATH}model')
+model.save(f'{PATH}model_linear')
 
 plt.plot(history.history["accuracy"], label="accuracy")
 plt.plot(history.history["val_accuracy"], label="val_accuracy")
