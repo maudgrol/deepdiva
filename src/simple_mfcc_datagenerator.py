@@ -1,7 +1,7 @@
 from utils.patch_utils import preset_to_patch, split_train_override_patch
 import spiegelib as spgl
 
-PATH = "../small_data3"
+PATH = "../small_data4"
 BASE_PATCH = "../data/MS-REV1_deepdiva.h2p"
 PARAMETERS_TO_RANDOMIZE = [86, 131, 148, 149]
 
