@@ -3,7 +3,7 @@ import copy
 import numpy as np
 import pandas as pd
 
-from dictionaries import *
+from deepdiva.utils.dictionaries import *
 
 class H2P():
 
@@ -23,7 +23,7 @@ class H2P():
             "Usage": "MW = filter\\r\\nAT = vibrato"}
 
 
-    def preset_to_patch(self, h2p_filename:str, normal=True):
+    def preset_to_patch(self, h2p_filename:str, normalize=True):
         """
         Transforms a h2p preset file to a patch with parameter values, optionally normalizing values.
         :param h2p_filename: Name (string) of the h2p preset file
@@ -78,9 +78,9 @@ class H2P():
 
         non_normalized_patch = [(x[0], x[1]) for x in sorted_h2p_row_parameter_index]
 
-        if normal == 1:
+        if normalize:
             return normalized_patch
-        elif normal == 0:
+        else:
             return non_normalized_patch
 
 
@@ -159,15 +159,21 @@ class H2P():
 
         # Remove header and binary data at end of h2p preset file
         end_of_header_index = h2p.index("*/\n") + 2
-        end_of_parameters_index = end_of_header_index + 402
+        end_of_parameters_index = h2p.index("#cm=Rtary2\n") + 11
         h2p_body = h2p[end_of_header_index:end_of_parameters_index]
 
-        # Add h2p preset parameters to a list
-        h2p_param = []
+        # Add h2p preset parameters to a list and remove irrelvant parameters
+        h2p_parameters = []
         for line in h2p_body:
             key_value = line.strip().split("=")
+
+            # These parameters have no equivalent in the patch
+            parameters_to_skip = ["PSong", "rMW", "rPW"]
+            if key_value[0] in parameters_to_skip:
+                continue
+
             value = clean_string(key_value[1])
 
-            h2p_param.append(value)
+            h2p_parameters.append(value)
 
-        return h2p_param
+        return h2p_parameters
