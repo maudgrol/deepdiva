@@ -3,16 +3,16 @@ import os
 import numpy as np
 import matplotlib.pyplot as plt
 
-DATA_PATH = "../data/"
+DATA_PATH = "../data/dataset"
 
 # Load data files
-trainAudio = np.load(os.path.join(DATA_PATH, "toy_data/train_0_audio_decoded.npy"))
-trainMels = np.load(os.path.join(DATA_PATH, "toy_data/train_0_melspectrogram.npy"))
-trainMFCC = np.load(os.path.join(DATA_PATH, "toy_data/train_0_features.npy"))
+trainAudio = np.load(os.path.join(DATA_PATH, "train_audio_decoded.npy"))
+trainMels = np.load(os.path.join(DATA_PATH, "train_melspectrogram.npy"))
+trainMFCC = np.load(os.path.join(DATA_PATH, "train_features.npy"))
 
-testAudio = np.load(os.path.join(DATA_PATH, "toy_data/test_0_audio_decoded.npy"))
-testMels = np.load(os.path.join(DATA_PATH, "toy_data/test_0_melspectrogram.npy"))
-testMFCC = np.load(os.path.join(DATA_PATH, "toy_data/test_0_features.npy"))
+testAudio = np.load(os.path.join(DATA_PATH, "test_audio_decoded.npy"))
+testMels = np.load(os.path.join(DATA_PATH, "test_melspectrogram.npy"))
+testMFCC = np.load(os.path.join(DATA_PATH, "test_features.npy"))
 
 # Check dimensions of training and test data
 print(f"The shape of trainAudio: {trainAudio.shape}")
