@@ -16,28 +16,22 @@ if not os.path.exists(MODEL_PATH):
     os.makedirs(MODEL_PATH)
 
 # Load data files
-trainMels = np.load(os.path.join(DATA_PATH, "train_0_melspectrogram.npy"))
-trainMFCC = np.load(os.path.join(DATA_PATH, "train_0_features.npy"))
-testMels = np.load(os.path.join(DATA_PATH, "test_0_melspectrogram.npy"))
-testMFCC = np.load(os.path.join(DATA_PATH, "test_0_features.npy"))
+trainMels = np.load(os.path.join(DATA_PATH, "train_melspectrogram.npy"))
+testMels = np.load(os.path.join(DATA_PATH, "test_melspectrogram.npy"))
 
 # Load training and validation targets
-train_target = np.load(os.path.join(DATA_PATH, "train_0_patches.npy"))
-test_target = np.load(os.path.join(DATA_PATH, "test_0_patches.npy"))
+train_target = np.load(os.path.join(DATA_PATH, "train_patches.npy"))
+test_target = np.load(os.path.join(DATA_PATH, "test_patches.npy"))
 
 # Check dimensions of training and test data
 print(f"The shape of trainMels: {trainMels.shape}")
-print(f"The shape of trainMFCC: {trainMFCC.shape}")
 print(f"The shape of trainTargets: {train_target.shape}")
 print(f"The shape of testMels: {testMels.shape}")
-print(f"The shape of testMFCC: {testMFCC.shape}")
 print(f"The shape of testTargets: {test_target.shape}")
 
 # Create tensorflow datasets
 train_mel_original = tf.data.Dataset.from_tensor_slices((trainMels, train_target))
 test_mel_original = tf.data.Dataset.from_tensor_slices((testMels, test_target))
-train_mfcc_original = tf.data.Dataset.from_tensor_slices((trainMFCC, train_target))
-test_mfcc_original = tf.data.Dataset.from_tensor_slices((testMFCC, test_target))
 
 # Save datasets - but seems tricky to reload because you need this spec variable saved
 filename = os.path.join(DATA_PATH, "train_dataset_original")
