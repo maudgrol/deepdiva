@@ -8,14 +8,14 @@ import soundfile
 
 DATA_PATH = "../data"
 VST_PATH = "/Library/Audio/Plug-Ins/VST/u-he/Diva.vst"
-FOLDER_NAME = "dataset_4params"
+FOLDER_NAME = "dataset_test"
 
 # Generated samples per data batch
 train_size = 10000
 test_size = 1000
 eval_size = 10
 # Number of data batches
-nr_batches = 5
+nr_batches = 1
 
 BASE_PATCH = "../data/MS-REV1_deepdiva.h2p"
 PARAMETERS_TO_RANDOMIZE = [86, 131, 148, 149]
@@ -53,7 +53,7 @@ def wav_to_binary(file):
       audio_binary = tf.io.read_file(file)
       audio, rate = tf.audio.decode_wav(audio_binary, desired_channels=-1)
 
-    return audio
+    return audio[:, 0]
 
 
 # Synthesizer configuration
@@ -101,11 +101,11 @@ for i in range(nr_batches):
     np.save(os.path.join(DATA_PATH, FOLDER_NAME, f"test_{i}_patches.npy"), testParams)
 
 
-# Setup data generator for evaluation data audio files
-generator_eval = spgl.DatasetGenerator(synth, features,
-                                       output_folder=os.path.join(DATA_PATH, "evaluation_data"),
-                                       save_audio=True)
-generator_eval.generate(eval_size, file_prefix="eval_")
+# # Setup data generator for evaluation data audio files
+# generator_eval = spgl.DatasetGenerator(synth, features,
+#                                        output_folder=os.path.join(DATA_PATH, "evaluation_data"),
+#                                        save_audio=True)
+# generator_eval.generate(eval_size, file_prefix="eval_")
 
 
 # Concatenate files and save
