@@ -7,7 +7,7 @@ import tensorflow as tf
 
 DATA_PATH = "../data/dataset_4params"
 
-# Transform decoded audio into mel spectrogram
+# Transform decoded audio into mel spectrogram - with tensorflow SEEMS SLOWER
 def tf_audio_to_mel(audio):
     audio = audio[:, 0]
 
@@ -23,13 +23,13 @@ def tf_audio_to_mel(audio):
         log_spec = tf.maximum(log_spec, tf.reduce_max(log_spec) - top_db)
         return log_spec
 
-    spectrograms = tf.signal.stft(audio,
+    spectrogram = tf.signal.stft(audio,
                                   frame_length=4096,
                                   fft_length=4096,
                                   frame_step=256,
                                   pad_end=True)
 
-    magnitude_spectrograms = tf.abs(spectrograms)
+    magnitude_spectrogram = tf.abs(spectrogram)
 
     mel_filterbank = tf.signal.linear_to_mel_weight_matrix(
         num_mel_bins=256,
@@ -38,18 +38,25 @@ def tf_audio_to_mel(audio):
         lower_edge_hertz=0,
         upper_edge_hertz=20000)
 
-    mel_spectrograms = tf.matmul(tf.square(magnitude_spectrograms), mel_filterbank)
+    mel_spectrogram = tf.matmul(tf.square(magnitude_spectrogram), mel_filterbank)
 
-    log_mel_spectrograms = power_to_db(mel_spectrograms)
+    # convert to decibel-scale melspectrogram: compute dB relative to peak power
+    log_mel_spectrogram = power_to_db(mel_spectrogram)
 
-    log_mel_spectrograms = tf.expand_dims(log_mel_spectrograms, axis=-1) # 2D -> 3D. Image resize requires 3 dimensional input
-    log_mel_spectrograms = tf.transpose(log_mel_spectrograms, perm=(1, 0 ,2)) # Change order of axes
-    log_mel_spectrograms = log_mel_spectrograms[::-1, :, :] # Flip the first axis (frequency)
+    # normalize data
+    log_mel_spectrogram = tf.divide(tf.subtract(log_mel_spectrogram, tf.math.reduce_min(log_mel_spectrogram)), \
+                                     tf.subtract(tf.math.reduce_max(log_mel_spectrogram), tf.math.reduce_min(log_mel_spectrogram)))
+    # add dimension for channel
+    log_mel_spectrogram = tf.expand_dims(log_mel_spectrogram, axis=-1)
+    # change order to frequency, time, channel
+    log_mel_spectrogram = tf.transpose(log_mel_spectrogram, perm=(1, 0 ,2)) # Change order of axes
+    # flip frequency axis so low frequencies are at bottom of image
+    log_mel_spectrogram = log_mel_spectrogram[::-1, :, :]
 
-    return log_mel_spectrograms
+    return log_mel_spectrogram
 
 
-# Using librosa to preprocess audio data - not used in project??
+# Transform decoded audio into mel spectrogram - with librosa
 def lib_audio_to_mel(audio):
     audio = audio[:,0].astype("float32")
 
@@ -66,31 +73,32 @@ def lib_audio_to_mel(audio):
         power=2.0
     )
 
-    spectrogram = librosa.core.power_to_db(spectrogram, ref=np.min)
-
-    spectrogram /= np.max(spectrogram)  # normalization: spectrogram / np.max
-    spectrogram = np.expand_dims(spectrogram, axis=-1)  # add axis at end
-    spectrogram = spectrogram[::-1, :, :] # we flip the image upside down so lower tones are lower in image
+    # convert to decibel-scale melspectrogram: compute dB relative to peak power
+    spectrogram = librosa.core.power_to_db(spectrogram, ref=np.max)
+    # normalize data
+    spectrogram = (spectrogram - np.min(spectrogram)) / (np.max(spectrogram) - np.min(spectrogram))
+    # add dimension for channel
+    spectrogram = np.expand_dims(spectrogram, axis=-1)
+    # flip frequency axis so low frequencies are at bottom of image
+    spectrogram = spectrogram[::-1, :, :]
 
     return spectrogram
 
 
 # Load the decoded audio files
-train_audio = np.load(os.path.join(DATA_PATH, "train_audio_decoded.npy"))
-# test_audio = np.load(os.path.join(DATA_PATH, "test_audio_decoded.npy"))
+#train_audio = np.load(os.path.join(DATA_PATH, "train_audio_decoded.npy"))
+test_audio = np.load(os.path.join(DATA_PATH, "test_audio_decoded.npy"))
 
-# Mel spectrograms train set - not necessary to process data offline?
-train_mel = tf.stack([tf_audio_to_mel(train_audio[i]) for i in range(train_audio.shape[0])], axis=0)
-print(train_mel.shape)
-train_mel.numpy()
-np.save(os.path.join(DATA_PATH, "train_melspectrogram.npy"), train_mel)
-
-
-# # Mel spectrograms test set
-# test_mel = tf.stack([tf_audio_to_mel(test_audio[i]) for i in range(test_audio.shape[0])], axis=0)
-# print(test_mel.shape)
-# test_mel.numpy()
-# np.save(os.path.join(DATA_PATH, "test_melspectrogram.npy"), test_mel)
+# # Mel spectrograms train set
+# # train_mel = np.stack([lib_audio_to_mel(train_audio[i]) for i in range(train_audio.shape[0])], axis=0)
+# # print(train_mel.shape)
+# # np.save(os.path.join(DATA_PATH, "train_melspectrogram.npy"), train_mel)
+#
+#
+# Mel spectrograms test set
+test_mel = np.stack([lib_audio_to_mel(test_audio[i]) for i in range(test_audio.shape[0])], axis=0)
+print(test_mel.shape)
+np.save(os.path.join(DATA_PATH, "test_melspectrogram.npy"), test_mel)
 
 
 
