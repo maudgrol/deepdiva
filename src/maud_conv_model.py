@@ -4,12 +4,12 @@ import tensorflow as tf
 
 class ConvModel(tf.keras.Model):
 
-    def __init__(self, input_size, output_size):
+    def __init__(self, shape, output_size):
         super(ConvModel, self).__init__()  # inherits from tf.keras.Model
-        self.input_size = input_size
+        self.shape = shape
         self.output_size = output_size
 
-        # Define all layers in init
+        # Define all layers
         # Layer of convolutional block 1
         self.conv1 = tf.keras.layers.Conv2D(filters=4,
                                             kernel_size=(3, 3),
@@ -63,9 +63,8 @@ class ConvModel(tf.keras.Model):
 
 
     def _build_graph(self):
-        input_shape = (self.input_size, self.input_size, 1)
-        self.build((None,) + input_shape)
-        inputs = tf.keras.Input(shape=input_shape)
+        self.build((None,) + self.shape)
+        inputs = tf.keras.Input(shape=(self.shape))
         self.call(inputs)
 
 
