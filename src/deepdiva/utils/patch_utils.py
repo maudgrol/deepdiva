@@ -20,7 +20,7 @@ def split_train_override_patch(patch, train_parameter_list:list):
 
     # Remove trainable parameters from list of overridden parameters (from last to first)
     for element in sorted(param_list, reverse=True):
-        del temp_overridden[element]
+        temp_overridden.pop(element)
 
     override_parameter_tuples = temp_overridden
     train_parameter_tuples = list(set(temp_trainable)-set(override_parameter_tuples))
