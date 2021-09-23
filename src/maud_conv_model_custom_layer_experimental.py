@@ -21,9 +21,6 @@ class ConvModel(tf.keras.Model):
                                                    n_mels=n_mels,
                                                    f_min=f_min,
                                                    f_max=f_max)
-        # Normalize data (on frequency axis)
-        self.norm = preprocessing.Normalization(axis=1,
-                                                name="Norm_1")
 
         # Layer of convolutional block 1
         self.conv1 = tf.keras.layers.Conv2D(filters=4,
@@ -87,7 +84,6 @@ class ConvModel(tf.keras.Model):
     def call(self, input_tensor, training=False):
         # forward pass: input layer
         x = self.logmelspectrogram(input_tensor)
-        x = self.norm(x)
 
         # forward pass: convolutional block 1
         x = self.conv1(x)
