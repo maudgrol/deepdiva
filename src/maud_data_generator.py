@@ -13,11 +13,11 @@ BASE_PATCH = "../data/MS-REV1_deepdiva.h2p"
 
 # Generated samples per data batch
 TRAIN_SIZE = 1000
-TEST_SIZE = 100
+TEST_SIZE = 200
 EVAL_SIZE = 20
 # Number of data batches
 NR_BATCHES = 50
-COMPLETED = 47
+COMPLETED = 0
 
 PARAMETERS_TO_RANDOMIZE = []
 PARAMETERS_TO_RANDOMIZE.extend(range(4, 16))
@@ -73,7 +73,7 @@ for i in range(COMPLETED, NR_BATCHES):
     generator.generate(TEST_SIZE, file_prefix=f"test_")
     generator.save_scaler(f"data_scaler_{i}.pkl")
 
-    # Decode audio files and save as numpy arrays
+    #Decode audio files and save as numpy arrays
     train_audio = tf.stack([wav_to_binary(os.path.join(DATA_PATH, FOLDER_NAME, "audio", f"train_output_{j}.wav")) \
                             for j in range(TRAIN_SIZE)], axis=0)
     train_audio_np = train_audio.numpy()
