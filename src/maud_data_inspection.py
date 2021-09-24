@@ -3,7 +3,7 @@ import os
 import numpy as np
 import matplotlib.pyplot as plt
 
-DATA_PATH = "../data/dataset_4params"
+DATA_PATH = "../data/dataset_124params"
 
 # Load data files
 #trainAudio = np.load(os.path.join(DATA_PATH, "train_audio_decoded.npy"))
