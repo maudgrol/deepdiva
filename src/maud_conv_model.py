@@ -11,7 +11,7 @@ class ConvModel(tf.keras.Model):
 
         # Define all layers
         # Layer of convolutional block 1
-        self.conv1 = tf.keras.layers.Conv2D(filters=4,
+        self.conv1 = tf.keras.layers.Conv2D(filters=8,
                                             kernel_size=(3, 3),
                                             strides=(1, 1),
                                             padding="same",
@@ -21,7 +21,7 @@ class ConvModel(tf.keras.Model):
                                                  name="MaxPool_1")
 
         # Layer of convolutional block 2
-        self.conv2 = tf.keras.layers.Conv2D(filters=8,
+        self.conv2 = tf.keras.layers.Conv2D(filters=16,
                                             kernel_size=(3, 3),
                                             strides=(1, 1),
                                             padding="same",
@@ -31,7 +31,7 @@ class ConvModel(tf.keras.Model):
                                                  name="MaxPool_2")
 
         # Layer of convolutional block 3
-        self.conv3 = tf.keras.layers.Conv2D(filters=8,
+        self.conv3 = tf.keras.layers.Conv2D(filters=16,
                                             kernel_size=(3, 3),
                                             strides=(1, 1),
                                             padding="same",
@@ -41,7 +41,7 @@ class ConvModel(tf.keras.Model):
                                                  name="MaxPool_3")
 
         # Layer of convolutional block 4
-        self.conv4 = tf.keras.layers.Conv2D(filters=16,
+        self.conv4 = tf.keras.layers.Conv2D(filters=32,
                                             kernel_size=(3, 3),
                                             strides=(1, 1),
                                             padding="same",
@@ -52,10 +52,15 @@ class ConvModel(tf.keras.Model):
 
         # Fully connected layers and dropout
         self.flatten = tf.keras.layers.Flatten(name="Flatten_1")
-        self.fc1 = tf.keras.layers.Dense(units=64,
+        self.fc1 = tf.keras.layers.Dense(units=256,
                                          activation="relu",
                                          name="Dense_1")
-        self.fc2 = tf.keras.layers.Dense(units=self.output_size,
+        self.dropout = tf.keras.layers.Dropout(rate=0.3,
+                                               name="Dropout_1")
+        self.fc2 = tf.keras.layers.Dense(units=128,
+                                         activation="relu",
+                                         name="Dense_2")
+        self.fc3 = tf.keras.layers.Dense(units=self.output_size,
                                          activation="linear",
                                          name="Output_layer")
 
@@ -68,7 +73,7 @@ class ConvModel(tf.keras.Model):
         self.call(inputs)
 
 
-    def call(self, input_tensor, training=False):
+    def call(self, input_tensor, training=None):
         # forward pass: convolutional block 1
         x = self.conv1(input_tensor)
         x = self.max1(x)
@@ -85,7 +90,9 @@ class ConvModel(tf.keras.Model):
         x = self.conv4(x)
         x = self.max4(x)
 
-        # forward pass: dense layers and output
+        # forward pass: dense layers, dropout and output
         x = self.flatten(x)
         x = self.fc1(x)
-        return self.fc2(x)
+        x = self.dropout(x, training=training)
+        x = self.fc2(x)
+        return self.fc3(x)
