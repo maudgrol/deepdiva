@@ -5,11 +5,12 @@ import numpy as np
 import tensorflow as tf
 
 
-DATA_PATH = "../data/dataset_4params"
+DATA_PATH = "../data/dataset_124params"
 
-# Transform decoded audio into mel spectrogram - with tensorflow SEEMS SLOWER
+# Transform decoded audio into mel spectrogram - with tensorflow
+# SEEMS SLOWER BECAUSE OF MULTIPLE OPERATIONS
+# WITH TENSORFLOW_IO THIS COULD BE FASTER BUT CANNOT USE WITH MAC M1
 def tf_audio_to_mel(audio):
-    audio = audio[:, 0]
 
     def tf_log10(x):
         numerator = tf.math.log(x)
@@ -58,7 +59,7 @@ def tf_audio_to_mel(audio):
 
 # Transform decoded audio into mel spectrogram - with librosa
 def lib_audio_to_mel(audio):
-    audio = audio[:,0].astype("float32")
+    audio = audio.astype("float32")
 
     spectrogram = librosa.feature.melspectrogram(
         y=audio,
@@ -86,15 +87,15 @@ def lib_audio_to_mel(audio):
 
 
 # Load the decoded audio files
-#train_audio = np.load(os.path.join(DATA_PATH, "train_audio_decoded.npy"))
+train_audio = np.load(os.path.join(DATA_PATH, "train_audio_decoded.npy"))
 test_audio = np.load(os.path.join(DATA_PATH, "test_audio_decoded.npy"))
 
-# # Mel spectrograms train set
-# # train_mel = np.stack([lib_audio_to_mel(train_audio[i]) for i in range(train_audio.shape[0])], axis=0)
-# # print(train_mel.shape)
-# # np.save(os.path.join(DATA_PATH, "train_melspectrogram.npy"), train_mel)
-#
-#
+# Mel spectrograms train set
+train_mel = np.stack([lib_audio_to_mel(train_audio[i]) for i in range(train_audio.shape[0])], axis=0)
+print(train_mel.shape)
+np.save(os.path.join(DATA_PATH, "train_melspectrogram.npy"), train_mel)
+
+
 # Mel spectrograms test set
 test_mel = np.stack([lib_audio_to_mel(test_audio[i]) for i in range(test_audio.shape[0])], axis=0)
 print(test_mel.shape)
