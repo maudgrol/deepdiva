@@ -1,15 +1,14 @@
 #!/usr/bin/env python
 import os
+import math
 import numpy as np
 import tensorflow as tf
 import matplotlib.pyplot as plt
-
 from maud_conv_model import ConvModel
 
-
-DATA_PATH = "../data/dataset_4params"
+DATA_PATH = "../data/dataset_124params"
 MODEL_PATH = "../models"
-BATCH_SIZE = 128
+BATCH_SIZE = 64
 
 # If model folder does not exist, create it.
 if not os.path.exists(MODEL_PATH):
@@ -33,18 +32,38 @@ print(f"The shape of testTargets: {test_target.shape}")
 dataset_train_original = tf.data.Dataset.from_tensor_slices((trainMels, train_target))
 dataset_validate_original = tf.data.Dataset.from_tensor_slices((testMels, test_target))
 
+# tf.data.experimental.save(dataset_train_original, os.path.join(DATA_PATH, "dataset_train_original"),
+#                           compression=None, shard_func=None)
+# tf.data.experimental.save(dataset_validate_original, os.path.join(DATA_PATH, "dataset_validate_original"),
+#                           compression=None, shard_func=None)
+
 # Prepare datasets for model training
 dataset_train = dataset_train_original.cache().shuffle(10000).batch(BATCH_SIZE)
 dataset_validate = dataset_validate_original.cache().batch(BATCH_SIZE) # No need to shuffle validation data
 
-# define custom loss function root mean squared error
+
+# Define custom loss function root mean squared error (MSE punishes big errors relatively more)
 def root_mean_squared_error(y_true, y_pred):
     return tf.sqrt(tf.mean(tf.square(y_pred - y_true)))
 
 
+# Define custom callback saving model's weights every n epochs
+checkpoint_path = os.path.join(MODEL_PATH, "maud_training_24sep_1700/cp-{epoch:03d}.ckpt")
+
+cp_callback = tf.keras.callbacks.ModelCheckpoint(
+    filepath=checkpoint_path,
+    monitor="val_loss",
+    verbose=1,
+    save_best_only=False,
+    save_weights_only=True,
+    mode="auto",
+    save_freq=2*math.ceil(trainMels.shape[0] / BATCH_SIZE)
+)
+
+
 # Train model
-model = ConvModel(shape=(256, 346, 1),
-                  output_size=4)
+model = ConvModel(shape=(256, 347, 1),
+                  output_size=124)
 
 model.summary()
 
@@ -53,14 +72,18 @@ model.compile(
     loss="mean_squared_error"
 )
 
+# Save model weights using the `checkpoint_path` format
+model.save_weights(checkpoint_path.format(epoch=0))
+
 history = model.fit(
     dataset_train,
-    epochs=2,
-    validation_data=dataset_validate
+    epochs=3,
+    validation_data=dataset_validate,
+    callbacks=[cp_callback]
 )
 
-# # # Save the entire model as a SavedModel.
-# # model.save(os.path.join(MODEL_PATH, 'maud_conv_model_18sep_1625'))
+# Save the entire model as a SavedModel.
+model.save(os.path.join(MODEL_PATH, "maud_training_24sep_1700/final_model"))
 
 
 plt.plot(history.history["loss"], label="training loss")
