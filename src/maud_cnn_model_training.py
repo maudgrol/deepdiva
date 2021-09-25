@@ -44,7 +44,7 @@ dataset_validate = dataset_validate_original.cache().batch(BATCH_SIZE) # No need
 
 # Define custom loss function root mean squared error (MSE punishes big errors relatively more)
 def root_mean_squared_error(y_true, y_pred):
-    return tf.sqrt(tf.mean(tf.square(y_pred - y_true)))
+    return tf.math.sqrt(tf.math.reduce_mean(tf.math.square(y_pred - y_true)))
 
 
 # Define custom callback saving model's weights every n epochs
@@ -71,9 +71,6 @@ model.compile(
     optimizer="adam",
     loss="mean_squared_error"
 )
-
-# Save model weights using the `checkpoint_path` format
-model.save_weights(checkpoint_path.format(epoch=0))
 
 history = model.fit(
     dataset_train,
