@@ -6,6 +6,15 @@ import tensorflow as tf
 
 
 DATA_PATH = "../data/dataset_124params"
+TRAIN_PATH = "../data/dataset_124params/train_dataset"
+VAL_PATH = "../data/dataset_124params/val_dataset"
+
+# If training and validation dataset folders do not exist
+if not os.path.exists(TRAIN_PATH):
+    os.makedirs(TRAIN_PATH)
+
+if not os.path.exists(VAL_PATH):
+    os.makedirs(VAL_PATH)
 
 # Transform decoded audio into mel spectrogram - with tensorflow
 # SEEMS SLOWER BECAUSE OF MULTIPLE OPERATIONS
@@ -90,16 +99,36 @@ def lib_audio_to_mel(audio):
 train_audio = np.load(os.path.join(DATA_PATH, "train_audio_decoded.npy"))
 test_audio = np.load(os.path.join(DATA_PATH, "test_audio_decoded.npy"))
 
+# OPTION 1: CREATING ONE BIG NUMPY ARRAY -----------------------
 # Mel spectrograms train set
 train_mel = np.stack([lib_audio_to_mel(train_audio[i]) for i in range(train_audio.shape[0])], axis=0)
 print(train_mel.shape)
 np.save(os.path.join(DATA_PATH, "train_melspectrogram.npy"), train_mel)
 
-
 # Mel spectrograms test set
 test_mel = np.stack([lib_audio_to_mel(test_audio[i]) for i in range(test_audio.shape[0])], axis=0)
 print(test_mel.shape)
 np.save(os.path.join(DATA_PATH, "test_melspectrogram.npy"), test_mel)
+
+
+# OPTION 2: CREATING NUMPY ARRAY FOR EACH EXAMPLE -----------------------
+# Load the target files
+train_patches = np.load(os.path.join(DATA_PATH, "train_patches.npy"))
+test_patches = np.load(os.path.join(DATA_PATH, "test_patches.npy"))
+
+# Mel spectrograms train set
+for i in range(train_audio.shape[0]):
+    train_mel = lib_audio_to_mel(train_audio[i])
+    np.save(os.path.join(TRAIN_PATH, f"train_melspectrogram_{i}.npy"), train_mel)
+    train_patch = train_patches[i]
+    np.save(os.path.join(TRAIN_PATH, f"train_patches_{i}.npy"), train_patch)
+
+# Mel spectrograms test set
+for i in range(test_audio.shape[0]):
+    test_mel = lib_audio_to_mel(test_audio[i])
+    np.save(os.path.join(VAL_PATH, f"test_melspectrogram_{i}.npy"), test_mel)
+    test_patch = test_patches[i]
+    np.save(os.path.join(VAL_PATH, f"test_patches_{i}.npy"), test_patch)
 
 
 
