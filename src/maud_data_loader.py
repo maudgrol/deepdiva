@@ -4,19 +4,20 @@ import math
 import numpy as np
 import tensorflow as tf
 
-TRAIN_PATH = "../data/dataset_124params/train_dataset"
-VAL_PATH = "../data/dataset_124params/train_dataset"
-
 
 class DataGenerator(tf.keras.utils.Sequence):
     """Generates dataset"""
-    def __init__(self, list_ids, nr_params=124, batch_size=64, dim=(256, 347), n_channels=1, shuffle=True):
+    def __init__(self, folder, prefix, list_ids, batch_size=64, nr_params=124,
+                 dim=(256, 347), n_channels=1, shuffle=True):
         # Initialization
+        self.folder = folder
+        self.prefix = prefix
+        self.list_ids = list_ids
         self.dim = dim
         self.batch_size = batch_size
-        self.nr_params = nr_params
-        self.list_ids = list_ids
+        self.dim = dim
         self.n_channels = n_channels
+        self.nr_params = nr_params
         self.shuffle = shuffle
         self.on_epoch_end()
 
@@ -52,9 +53,9 @@ class DataGenerator(tf.keras.utils.Sequence):
         # Generate data
         for i, ID in enumerate(list_ids_temp):
             # Store sample
-            X[i, ] = np.load(os.path.join(TRAIN_PATH, f"train_melspectrogram_{ID}.npy"))
+            X[i, ] = np.load(os.path.join(self.folder, f"{self.prefix}melspectrogram_{ID}.npy"))
 
             # Store target
-            y[i, ] = np.load(os.path.join(TRAIN_PATH, f"train_target_{ID}.npy"))
+            y[i, ] = np.load(os.path.join(self.folder, f"{self.prefix}target_{ID}.npy"))
 
         return X, y
