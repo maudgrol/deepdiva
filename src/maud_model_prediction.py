@@ -6,6 +6,7 @@ import librosa
 import soundfile
 import spiegelib as spgl
 from utils.patch_utils import preset_to_patch, patch_to_preset, split_train_override_patch
+from maud_conv_model import ConvModel
 
 DATA_PATH = "../data/eval_dataset_124params"
 AUDIO_PATH = "../data/eval_dataset_124params/audio"
@@ -26,7 +27,7 @@ PARAMETERS_TO_RANDOMIZE.extend([169, 170, 171, 174])
 PARAMETERS_TO_RANDOMIZE.extend(range(264, 271))
 PARAMETERS_TO_RANDOMIZE.extend([278, 279, 280])
 
-eval_audio = 9
+eval_audio = 0
 
 # Import sound for evaluation and convert to mel spectrogram
 # !!! Write function that also detects silence and trims?
@@ -72,7 +73,12 @@ eval_mel = lib_wav_to_mel(os.path.join(AUDIO_PATH, f"eval_output_{eval_audio}.wa
 print(eval_mel.shape)
 
 # load model
-model = tf.keras.models.load_model(os.path.join(MODEL_PATH, 'maud_conv_model_24sep_1434'))
+#model = tf.keras.models.load_model(os.path.join(MODEL_PATH, "maud_training_26sep_08", "final_model_124params"))
+model = ConvModel(shape=(256, 347, 1),
+                  output_size=124)
+
+latest = tf.train.latest_checkpoint(os.path.join(MODEL_PATH, "maud_training_26sep_08"))
+model.load_weights(latest)
 
 # add a dimension (for training samples) for prediction
 prediction = model.predict(tf.expand_dims(eval_mel, axis=0))[0].astype("float64")
@@ -107,7 +113,12 @@ predicted_audio.save(os.path.join(AUDIO_PATH, f"predicted_eval_output_{eval_audi
 
 
 # 2. COMPARISON PREDICTED PATCH VS TRUE PATCH
+def rmse(y_true, y_pred):
+    return tf.sqrt(tf.reduce_mean(tf.square(y_pred - y_true)))
 eval_patches = np.load(os.path.join(DATA_PATH, "eval_patches.npy"))
 
 mse = tf.keras.metrics.mean_squared_error(eval_patches[eval_audio], prediction)
+rmse = rmse(eval_patches[eval_audio], prediction)
+
 print(f"Mean Squared Error: {mse:.2f}")
+print(f"Root Mean Squared Error: {rmse:.2f}")

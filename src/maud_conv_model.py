@@ -11,7 +11,7 @@ class ConvModel(tf.keras.Model):
 
         # Define all layers
         # Layer of convolutional block 1
-        self.conv1 = tf.keras.layers.Conv2D(filters=8,
+        self.conv1 = tf.keras.layers.Conv2D(filters=16,
                                             kernel_size=(3, 3),
                                             strides=(1, 1),
                                             padding="same",
@@ -21,7 +21,7 @@ class ConvModel(tf.keras.Model):
                                                  name="MaxPool_1")
 
         # Layer of convolutional block 2
-        self.conv2 = tf.keras.layers.Conv2D(filters=16,
+        self.conv2 = tf.keras.layers.Conv2D(filters=32,
                                             kernel_size=(3, 3),
                                             strides=(1, 1),
                                             padding="same",
@@ -31,7 +31,7 @@ class ConvModel(tf.keras.Model):
                                                  name="MaxPool_2")
 
         # Layer of convolutional block 3
-        self.conv3 = tf.keras.layers.Conv2D(filters=16,
+        self.conv3 = tf.keras.layers.Conv2D(filters=32,
                                             kernel_size=(3, 3),
                                             strides=(1, 1),
                                             padding="same",
@@ -41,7 +41,7 @@ class ConvModel(tf.keras.Model):
                                                  name="MaxPool_3")
 
         # Layer of convolutional block 4
-        self.conv4 = tf.keras.layers.Conv2D(filters=32,
+        self.conv4 = tf.keras.layers.Conv2D(filters=64,
                                             kernel_size=(3, 3),
                                             strides=(1, 1),
                                             padding="same",
