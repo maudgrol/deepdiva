@@ -105,7 +105,9 @@ def lib_audio_to_mfcc(audio, time_major=True):
         sr=44100,
         n_fft=2048,
         hop_length=1024,
-        n_mfcc=13
+        n_mfcc=13,
+        fmin=0,
+        fmax=20000
     )
 
     # Change data to format :(time_slices, features) for LSTM
