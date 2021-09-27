@@ -7,9 +7,9 @@ DATA_PATH = "../data/dataset_124params"
 
 # Load data files
 #trainAudio = np.load(os.path.join(DATA_PATH, "train_audio_decoded.npy"))
-#trainMels = np.load(os.path.join(DATA_PATH, "train_melspectrogram.npy"))
+#trainMels = np.load(os.path.join(DATA_PATH, "train_melspectrogram2.npy"))
 #testAudio = np.load(os.path.join(DATA_PATH, "test_audio_decoded.npy"))
-testMels = np.load(os.path.join(DATA_PATH, "test_melspectrogram.npy"))
+testMels = np.load(os.path.join(DATA_PATH, "test_melspectrogram2.npy"))
 
 # Check dimensions of training and test data
 #print(f"The shape of trainAudio: {trainAudio.shape}")
