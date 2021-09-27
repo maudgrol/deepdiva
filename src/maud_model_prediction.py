@@ -29,6 +29,10 @@ PARAMETERS_TO_RANDOMIZE.extend([278, 279, 280])
 
 eval_audio = 0
 
+with open(os.path.join(DATA_PATH, "mfcc_scaling.pickle"), 'rb') as handle:
+    mfcc_scaler = pickle.load(handle)
+
+
 # Import sound for evaluation and convert to mel spectrogram
 # !!! Write function that also detects silence and trims?
 def lib_wav_to_mel(file):
@@ -46,10 +50,10 @@ def lib_wav_to_mel(file):
 
     spectrogram = librosa.feature.melspectrogram(
         y=audio,
-        n_fft=4096,
-        win_length=4096,
-        n_mels=256,
-        hop_length=256,
+        n_fft=2048,
+        win_length=2048,
+        n_mels=128,
+        hop_length=512,
         sr=rate,
         fmin=0,
         fmax=20000,
@@ -69,11 +73,49 @@ def lib_wav_to_mel(file):
     return spectrogram
 
 
+# !!! Write function that also detects silence and trims?
+def lib_wav_to_mfcc(file, time_major=True):
+    # Loading and decoding the wav file.
+    audio_binary = tf.io.read_file(file)
+    try:
+      audio, rate = tf.audio.decode_wav(audio_binary, desired_channels=-1)
+    except:
+      data, samplerate = soundfile.read(file)
+      soundfile.write(file, data, samplerate, subtype='PCM_16')
+      audio_binary = tf.io.read_file(file)
+      audio, rate = tf.audio.decode_wav(audio_binary, desired_channels=-1)
+
+    audio = audio[:, 0].numpy().astype("float32")
+
+    mfcc = librosa.feature.mfcc(
+        y=audio,
+        sr=44100,
+        n_fft=2048,
+        hop_length=1024,
+        n_mfcc=13,
+        fmin=0,
+        fmax=20000
+    )
+
+    # Change data to format :(time_slices, features) for LSTM
+    if time_major:
+        mfcc = np.transpose(mfcc)
+
+    # Normalize features
+    mfcc = (mfcc - mfcc_scaler["mfcc_min"]) / mfcc_scaler["mfcc_range"]
+
+    return mfcc
+
+
 eval_mel = lib_wav_to_mel(os.path.join(AUDIO_PATH, f"eval_output_{eval_audio}.wav"))
 print(eval_mel.shape)
 
+eval_mfcc = lib_wav_to_mfcc(os.path.join(AUDIO_PATH, f"eval_output_{eval_audio}.wav"))
+print(eval_mfcc.shape)
+
 # load model
 #model = tf.keras.models.load_model(os.path.join(MODEL_PATH, "maud_training_26sep_08", "final_model_124params"))
+
 model = ConvModel(shape=(256, 347, 1),
                   output_size=124)
 
@@ -97,8 +139,8 @@ full_predicted_patch = override_parameters
 #make a preset from the predicted patch
 preset = patch_to_preset(full_predicted_patch, os.path.join(DATA_PATH, f"predicted_patch.h2p"))
 
-# EVALUATION ------------------------------------
 
+# EVALUATION ------------------------------------
 # 1. AUDIO COMPARISON ---------------------------
 # render the sound of the predicted patch
 synth = spgl.synth.SynthVST(VST_PATH,
@@ -110,6 +152,7 @@ synth.get_patch()
 predicted_render = synth.render_patch()
 predicted_audio = synth.get_audio()
 predicted_audio.save(os.path.join(AUDIO_PATH, f"predicted_eval_output_{eval_audio}.wav"))
+print(f"The predicted audio file 'predicted_eval_output_{eval_audio}.wav' was saved in {AUDIO_PATH}")
 
 
 # 2. COMPARISON PREDICTED PATCH VS TRUE PATCH
