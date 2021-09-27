@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 import os
+import pickle
 import librosa
 import numpy as np
 import tensorflow as tf
@@ -95,40 +96,80 @@ def lib_audio_to_mel(audio):
     return spectrogram
 
 
+# Transform decoded audio into mel-frequency cepstrum spectrogram - with librosa
+def lib_audio_to_mfcc(audio, time_major=True):
+    audio = audio.astype("float32")
+
+    mfcc = librosa.feature.mfcc(
+        y=audio,
+        sr=44100,
+        n_fft=2048,
+        hop_length=1024,
+        n_mfcc=13
+    )
+
+    # Change data to format :(time_slices, features) for LSTM
+    if time_major:
+        mfcc = np.transpose(mfcc)
+
+    return mfcc
+
+
 # Load the decoded audio files
 train_audio = np.load(os.path.join(DATA_PATH, "train_audio_decoded.npy"))
 test_audio = np.load(os.path.join(DATA_PATH, "test_audio_decoded.npy"))
 
 # OPTION 1: CREATING ONE BIG NUMPY ARRAY -----------------------
-# Mel spectrograms train set
-train_mel = np.stack([lib_audio_to_mel(train_audio[i]) for i in range(train_audio.shape[0])], axis=0)
-print(train_mel.shape)
-np.save(os.path.join(DATA_PATH, "train_melspectrogram2.npy"), train_mel)
+# # Mel spectrograms train set
+# train_mel = np.stack([lib_audio_to_mel(train_audio[i]) for i in range(train_audio.shape[0])], axis=0)
+# print(train_mel.shape)
+# np.save(os.path.join(DATA_PATH, "train_melspectrogram2.npy"), train_mel)
+#
+# # Mel spectrograms test set
+# test_mel = np.stack([lib_audio_to_mel(test_audio[i]) for i in range(test_audio.shape[0])], axis=0)
+# print(test_mel.shape)
+# np.save(os.path.join(DATA_PATH, "test_melspectrogram2.npy"), test_mel)
 
-# Mel spectrograms test set
-test_mel = np.stack([lib_audio_to_mel(test_audio[i]) for i in range(test_audio.shape[0])], axis=0)
-print(test_mel.shape)
-np.save(os.path.join(DATA_PATH, "test_melspectrogram2.npy"), test_mel)
+# MFCC train set
+train_mfcc = np.stack([lib_audio_to_mfcc(train_audio[i]) for i in range(train_audio.shape[0])], axis=0)
+# Normalize the data based on entire training dataset
+mfcc_min = np.min(train_mfcc)
+mfcc_range = np.max(train_mfcc) - np.min(train_mfcc)
+train_mfcc = (train_mfcc - mfcc_min) / mfcc_range
+print(train_mfcc.shape)
+np.save(os.path.join(DATA_PATH, "train_mfcc.npy"), train_mfcc)
+
+# save scaling dictionary
+mfcc_scaling = {"mfcc_min": mfcc_min, "mfcc_range":mfcc_range}
+with open(os.path.join(DATA_PATH, "mfcc_scaling.pickle"), 'wb') as handle:
+    pickle.dump(mfcc_scaling, handle, protocol=pickle.HIGHEST_PROTOCOL)
+
+# MFCC test set
+test_mfcc = np.stack([lib_audio_to_mfcc(test_audio[i]) for i in range(test_audio.shape[0])], axis=0)
+# Normalize the data
+test_mfcc = (test_mfcc - mfcc_min) / mfcc_range
+print(test_mfcc.shape)
+np.save(os.path.join(DATA_PATH, "test_mfcc.npy"), test_mfcc)
 
 
 # OPTION 2: CREATING NUMPY ARRAY FOR EACH EXAMPLE -----------------------
 # Load the target files
-train_patches = np.load(os.path.join(DATA_PATH, "train_patches.npy"))
-test_patches = np.load(os.path.join(DATA_PATH, "test_patches.npy"))
-
-# Mel spectrograms train set
-for i in range(train_audio.shape[0]):
-    train_mel = lib_audio_to_mel(train_audio[i])
-    np.save(os.path.join(TRAIN_PATH, f"train_melspectrogram_{i}.npy"), train_mel)
-    train_patch = train_patches[i]
-    np.save(os.path.join(TRAIN_PATH, f"train_patches_{i}.npy"), train_patch)
-
-# Mel spectrograms test set
-for i in range(test_audio.shape[0]):
-    test_mel = lib_audio_to_mel(test_audio[i])
-    np.save(os.path.join(VAL_PATH, f"test_melspectrogram_{i}.npy"), test_mel)
-    test_patch = test_patches[i]
-    np.save(os.path.join(VAL_PATH, f"test_patches_{i}.npy"), test_patch)
+# train_patches = np.load(os.path.join(DATA_PATH, "train_patches.npy"))
+# test_patches = np.load(os.path.join(DATA_PATH, "test_patches.npy"))
+#
+# # Mel spectrograms train set
+# for i in range(train_audio.shape[0]):
+#     train_mel = lib_audio_to_mel(train_audio[i])
+#     np.save(os.path.join(TRAIN_PATH, f"train_melspectrogram_{i}.npy"), train_mel)
+#     train_patch = train_patches[i]
+#     np.save(os.path.join(TRAIN_PATH, f"train_patches_{i}.npy"), train_patch)
+#
+# # Mel spectrograms test set
+# for i in range(test_audio.shape[0]):
+#     test_mel = lib_audio_to_mel(test_audio[i])
+#     np.save(os.path.join(VAL_PATH, f"test_melspectrogram_{i}.npy"), test_mel)
+#     test_patch = test_patches[i]
+#     np.save(os.path.join(VAL_PATH, f"test_patches_{i}.npy"), test_patch)
 
 
 
