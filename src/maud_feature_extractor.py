@@ -6,8 +6,8 @@ import tensorflow as tf
 
 
 DATA_PATH = "../data/dataset_124params"
-TRAIN_PATH = "../data/dataset_124params/train_dataset"
-VAL_PATH = "../data/dataset_124params/val_dataset"
+TRAIN_PATH = "../data/dataset_124params/train_dataset2"
+VAL_PATH = "../data/dataset_124params/val_dataset2"
 
 # If training and validation dataset folders do not exist
 if not os.path.exists(TRAIN_PATH):
@@ -72,10 +72,10 @@ def lib_audio_to_mel(audio):
 
     spectrogram = librosa.feature.melspectrogram(
         y=audio,
-        n_fft=4096,
-        win_length=4096,
-        n_mels=256,
-        hop_length=256,
+        n_fft=2048,
+        win_length=2048,
+        n_mels=128,
+        hop_length=512,
         sr=44100,
         fmin=0,
         fmax=20000,
@@ -103,12 +103,12 @@ test_audio = np.load(os.path.join(DATA_PATH, "test_audio_decoded.npy"))
 # Mel spectrograms train set
 train_mel = np.stack([lib_audio_to_mel(train_audio[i]) for i in range(train_audio.shape[0])], axis=0)
 print(train_mel.shape)
-np.save(os.path.join(DATA_PATH, "train_melspectrogram.npy"), train_mel)
+np.save(os.path.join(DATA_PATH, "train_melspectrogram2.npy"), train_mel)
 
 # Mel spectrograms test set
 test_mel = np.stack([lib_audio_to_mel(test_audio[i]) for i in range(test_audio.shape[0])], axis=0)
 print(test_mel.shape)
-np.save(os.path.join(DATA_PATH, "test_melspectrogram.npy"), test_mel)
+np.save(os.path.join(DATA_PATH, "test_melspectrogram2.npy"), test_mel)
 
 
 # OPTION 2: CREATING NUMPY ARRAY FOR EACH EXAMPLE -----------------------
