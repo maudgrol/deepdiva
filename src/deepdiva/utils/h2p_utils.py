@@ -141,7 +141,7 @@ class H2P():
         return transformed_patch
 
 
-    def _h2p_raw_to_h2p_param(self, file):
+    def __h2p_raw_to_h2p_param(self, file):
         """
         Helper function to extract parameters from h2p preset file
         :param file: inherets file from h2p_raw_to_h2p_param function
