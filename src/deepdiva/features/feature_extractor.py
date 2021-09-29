@@ -67,7 +67,7 @@ class FeatureExtractor():
         # convert to decibel-scale melspectrogram: compute dB relative to peak power
         spectrogram = librosa.core.power_to_db(spectrogram, ref=np.max)
         # normalize data
-        spectrogram = (spectrogram - np.min(spectrogram)) / (np.max(spectrogram) - np.min(spectrogram))
+        spectrogram = (spectrogram - (-80)) / (0 - (-80))
         # add dimension for channel
         spectrogram = np.expand_dims(spectrogram, axis=-1)
         # flip frequency axis so low frequencies are at bottom of image
