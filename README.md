@@ -89,7 +89,7 @@ Options:
 An example of making a small training dataset with only 4 parameters varying, and saving the audio .wav files:
 
 ```angular2html
-python src/deepdiva/data/make_dataset.py --sample-size 10 --save-audio --folder-name "dataset_4params" --file-prefix "train_" --random-parameters '86, 131, 148, 149'
+python src/deepdiva/data/make_dataset.py --sample-size 10 --save-audio --folder-name "dataset_4params" --file-prefix "train_" --random-parameters '86 131 148 149'
 ```
 
 ## Feature extraction
