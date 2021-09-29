@@ -5,3 +5,4 @@ Deepdiva imports
 """
 
 import deepdiva.utils
+import deepdiva.data
