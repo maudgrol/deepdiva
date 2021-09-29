@@ -60,29 +60,29 @@ Interface for Click CLI.
 Options:
 --data-path PATH                Path to data folder  [default: ./data/]
 --vst-path PATH                 Path to vst plugin  [default:
-/Library/Audio/Plug-Ins/VST/u-he/Diva.vst]
+                                /Library/Audio/Plug-Ins/VST/u-he/Diva.vst]
 --folder-name TEXT              Folder name for saving dataset  [default:
-dataset]
+                                dataset]
 --base-preset TEXT              DIVA preset that serves as base for fixed
-parameters  [default: MS-REV1_deepdiva.h2p]
+                                parameters  [default: MS-REV1_deepdiva.h2p]
 --random-parameters TEXT        Indices of to be randomized parameters.
-Format: 'id id'  [default: ]
+                                Format: 'id id'  [default: ]
 --save-audio / --no-save-audio  Whether to save generated audio as .wav
-files  [default: no-save-audio]
+                                files  [default: no-save-audio]
 --sample-rate INTEGER           Sample rate for rendering audio  [default:
-44100]
+                                44100]
 --midi-note-pitch INTEGER       Midi note (C3 is 48)  [default: 48]
 --midi-note-velocity INTEGER    Midi note velocity (0-127)  [default: 127]
 --note-length-seconds FLOAT     Note length in seconds  [default: 2.0]
 --render-length-seconds FLOAT   Rendered audio length in seconds  [default:
-2.0]
+                                2.0]
 --sample-size INTEGER           Number of generated data samples per batch
-[required]
+                                [required]
 --file-prefix TEXT              Prefix for saving generated audio and patch
-files (e.g. 'train_')  [default: ]
+                                files (e.g. 'train_')  [default: ]
 --nr-data-batches INTEGER       Number of data batches  [default: 1]
 --nr-batch-completed INTEGER    Number of already generated data batches,
-[default: 0]
+                                [default: 0]
 --help                          Show this message and exit.
 ```
 
@@ -110,10 +110,10 @@ file to be re-used on the validation dataset and on new data. The MFCC features 
 The number of Mel bands to generate was set to 128. The length of the Fast Fourier Transform window was set to 2048,
 with the number of samples between successive frames set to 512. Each frame of audio was windowed by a Hann window of
 length 2048. The lowest frequency and highest frequency (in Hz) were set to 0 and 20000 respectively. The mel-scaled
-power spectrogram was then converted to decibel units and normalized. An extra dimension was added for channel so the
-output is of shape (n_mels, time, channel), which can be used in a Convolutional Neural Network architecture. The mel
-frequency bands axis was flipped so low frequencies are at the bottom of the created mel spectrogram. The mel-scaled
-power spectrograms are saved under '_melspectrogram.npy'.
+power spectrogram uses the decibel scale and was normalized to values ranging between [0,1]. An extra dimension was added for channel so the
+output is of shape (n_mels, time, channels), which can be used in a Convolutional Neural Network architecture. The mel
+frequency band axis was flipped so low frequencies are at the bottom of the created mel spectrogram. The mel-scaled
+power spectrograms are saved under 'melspectrogram.npy'.
 
 To extract features for your own generated dataset, you can check out all the possible settings you can pass when
 running get_features.py:
@@ -121,7 +121,45 @@ running get_features.py:
 ```angular2html
 python src/deepdiva/features/get_features.py --help
 
+Usage: get_features.py [OPTIONS]
 
+  Interface for Click CLI.
+
+Options:
+  --feature [spectrogram|mfcc]    Which type of feature to extract  [required]
+  --data-path PATH                Path to dataset folder  [default:
+                                  ./data/dataset]
+  --data-file TEXT                Audio file (file.npy) from which to extract
+                                  features  [required]
+  --file-prefix TEXT              Prefix for saving generated feature files
+                                  (e.g. 'train_')  [default: ]
+  --saved-scaler / --no-saved-scaler
+                                  Whether to use a previously saved data
+                                  scaler object when extracting MFCCs
+                                  [default: no-saved-scaler]
+  --scaler-file TEXT              File name of saved data scaler object
+  --scale-axis INTEGER            Axis or axes to use for calculating scaling
+                                  parameteres. Defaults to 0, which scales
+                                  each MFCC and time series component
+                                  independently.  [default: 0]
+  --n_fft INTEGER                 Length of the FFT window  [default: 2048]
+  --win-length INTEGER            Each frame of audio is windowed by window()
+                                  and will be of length win_length and then
+                                  padded with zeros. Defaults to win_length =
+                                  n_fft
+  --hop_length INTEGER            Number of samples between successive frames
+                                  [default: 512;required]
+  --n_mels INTEGER                Number of Mel bands to generate  [default:
+                                  128]
+  --n_mfcc INTEGER                Number of MFCCs to return  [default: 13]
+  --sample-rate INTEGER           Sampling rate of the incoming signal
+                                  [default: 44100]
+  --fmin INTEGER                  Lowest frequency (in Hz)  [default: 0]
+  --fmax INTEGER                  Highest frequency (in Hz), defaults to
+                                  sample rate // 2
+  --time-major / --no-time-major  Change MFCC to shape (time_slices, n_mfcc)
+                                  for modelling  [default: time-major]
+  --help                          Show this message and exit.
 ```
 
 An example of extracting normalized mel spectrogram features and setting some options:
