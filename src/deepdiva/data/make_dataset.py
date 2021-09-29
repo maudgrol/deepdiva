@@ -44,12 +44,12 @@ def click_main(data_path, vst_path, folder_name, base_preset, random_parameters,
                render_length_seconds, sample_size, file_prefix, nr_batches, nr_completed):
     """
     Interface for Click CLI.
-    First creates a list of integers of parameters to randomize, then generates dataset with specified options.
     """
-
+    # Create a list of integers of parameters to randomize
     random_parameters = random_parameters.split()
     random_parameters = [int(x) for x in random_parameters]
 
+    # Generate dataset (in different batches)
     for batch in range(nr_completed, nr_batches):
         generator = DatasetGenerator(data_path=data_path, vst_path=vst_path, folder_name=folder_name,
                                      base_preset=base_preset, random_parameters=random_parameters,
