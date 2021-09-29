@@ -8,9 +8,9 @@ import librosa
 class FeatureExtractor():
 
     def __init__(self,
-                 data_path="./data/train_4params",
-                 saved_scaler=False,
-                 scaler_file="mfcc_scaler.pickle"):
+                 data_path,
+                 saved_scaler,
+                 scaler_file):
 
         """
         Constructor
@@ -21,8 +21,8 @@ class FeatureExtractor():
         self.scaler_file = scaler_file
 
 
-    def melspectrogram(self, audio=None, n_fft=2048, win_length=None, hop_length=512,
-                       n_mels=128, sample_rate=44100, freq_min=0, freq_max=None):
+    def melspectrogram(self, audio, n_fft, win_length, hop_length,
+                       n_mels, sample_rate, freq_min, freq_max):
         """
         :param audio: audio time-series, numpy array
         :param n_fft: number of Fast Fourier Transform components
@@ -76,8 +76,8 @@ class FeatureExtractor():
         return spectrogram
 
 
-    def mfcc(self, audio=None, n_fft=2048, win_length=None, hop_length=1024, n_mfcc=13,
-             sample_rate=44100, freq_min=0, freq_max=None, time_major=True):
+    def mfcc(self, audio, n_fft, win_length, hop_length, n_mfcc,
+             sample_rate, freq_min, freq_max, time_major):
         """
         :param audio: audio time-series, numpy array
         :param n_fft: number of Fast Fourier Transform components
@@ -118,7 +118,7 @@ class FeatureExtractor():
             n_fft=n_fft,
             win_length=win_length,
             hop_length=hop_length,
-            n_mfcc=13,
+            n_mfcc=n_mfcc,
             sr=sample_rate,
             fmin=freq_min,
             fmax=freq_max
