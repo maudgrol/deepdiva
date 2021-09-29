@@ -94,8 +94,8 @@ python src/deepdiva/data/make_dataset.py --sample-size 10 --save-audio --folder-
 
 ## Feature extraction
 
-We extracted both mel-frequency cepstral coefficients (MFCC) and mel-scaled power spectrograms as features to experiment
-with LSTM and Convolutional Neural Network architectures respectively.
+We extracted both mel-frequency cepstral coefficients (MFCC) and mel-scaled spectrograms as features to experiment with
+LSTM and Convolutional Neural Network architectures respectively.
 
 ### Mel-frequency cepstral coefficients
 
@@ -103,7 +103,7 @@ The number of MFCCs to return was set to 13, the length of the Fast Fourier Tran
 number of samples between successive frames set to 1024. We set a time_major argument to True so that the orientation of
 the output is (time_slices, features), which can be used in a LSTM model architecture. We normalized the MFCC dataset
 based on the training dataset, rescaling the range of the data to [0,1]. The scaling information is saved in a pickle
-file to be re-used on the validation dataset and on new data. The MFCC features are saved under '_mfcc.npy'.
+file to be re-used on the validation dataset and on new data. The MFCC features are saved under 'mfcc.npy'.
 
 ### Mel-spectrogram
 
@@ -115,10 +115,26 @@ output is of shape (n_mels, time, channel), which can be used in a Convolutional
 frequency bands axis was flipped so low frequencies are at the bottom of the created mel spectrogram. The mel-scaled
 power spectrograms are saved under '_melspectrogram.npy'.
 
-To extract features for your own dataset, run the following:
+To extract features for your own generated dataset, you can check out all the possible settings you can pass when
+running get_features.py:
 
 ```angular2html
-python src/deepdiva/data/feature_extraction.py
+python src/deepdiva/features/get_features.py --help
+
+
+```
+
+An example of extracting normalized mel spectrogram features and setting some options:
+
+```angular2html
+python src/deepdiva/features/get_features.py --feature "spectrogram" --data-path "./data/dataset" --data-file "train_audio.npy" --file-prefix "train_" --fmax 20000
+```
+
+For mfcc features you have to indicate whether you want to use a previously saved scaler object for normalizing (e.g.
+when extracting MFCCs for validation and test data). This defaults to False, so it will create, use and save a data
+scaler object based on the data. An example of extracting mfcc features with a previously saved scaler object:
+```angular2html
+python src/deepdiva/features/get_features.py --feature "mfcc" --data-path "./data/dataset" --data-file "train_audio.npy" --file-prefix "test_" --fmax 20000 --saved-scaler --scaler-file "train_mfcc_scaling.pickle"
 ```
 
 ## Model training
@@ -144,9 +160,13 @@ python src/deepdiva/model/model_training.py
 │   ├── deepdiva
 │   │   ├── __init__.py           <- Makes src/deepdiva a Python module
 │   │   │
-│   │   ├── data                  <- Scripts to generate data and extract features
+│   │   ├── data                  <- Scripts to generate data
 │   │   │   └── make_dataset.py
-│   │   │   └── feature_extraction.py
+│   │   │   └── dataset_generator.py
+│   │   │
+│   │   ├── features              <- Scripts to extract features
+│   │   │   └── get_features.py
+│   │   │   └── feature_extractor.py
 │   │   │
 │   │   ├── models                <- Scripts to train models and use saved model to make predictions
 │   │   │   └── make_prediction.py
