@@ -45,9 +45,22 @@ def click_main(data_path, vst_path, folder_name, base_preset, random_parameters,
     """
     Interface for Click CLI.
     """
-    # Create a list of integers of parameters to randomize
+
+    # Create a list of integers of parameters to randomize from random_parameters string variable
     random_parameters = random_parameters.split()
     random_parameters = [int(x) for x in random_parameters]
+
+    main(data_path=data_path, vst_path=vst_path, folder_name=folder_name, base_preset=base_preset,
+         random_parameters=random_parameters, save_audio=save_audio, sample_rate=sample_rate,
+         midi_note_pitch=midi_note_pitch, midi_note_velocity=midi_note_velocity, note_length_seconds=note_length_seconds,
+         render_length_seconds=render_length_seconds, sample_size=sample_size, file_prefix=file_prefix,
+         nr_batches=nr_batches, nr_completed=nr_completed)
+
+
+def main(data_path, vst_path, folder_name, base_preset, random_parameters, save_audio,
+               sample_rate, midi_note_pitch, midi_note_velocity, note_length_seconds,
+               render_length_seconds, sample_size, file_prefix, nr_batches, nr_completed):
+    """Runs data processing scripts to generate dataset"""
 
     # Generate dataset (in different batches)
     for batch in range(nr_completed, nr_batches):
