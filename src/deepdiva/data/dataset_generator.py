@@ -11,17 +11,17 @@ from deepdiva.utils.patch_utils import split_train_override_patch
 class DatasetGenerator():
 
     def __init__(self,
-                 data_path=os.path.join(os.getcwd(), "data"),
-                 vst_path="/Library/Audio/Plug-Ins/VST/u-he/Diva.vst",
-                 folder_name="dataset",
-                 base_preset="MS-REV1_deepdiva.h2p",
-                 random_parameters=[],
-                 save_audio=False,
-                 sample_rate=44100,
-                 midi_note_pitch=48,
-                 midi_note_velocity=127,
-                 note_length_seconds=2.0,
-                 render_length_seconds=2.0):
+                 data_path,
+                 vst_path,
+                 folder_name,
+                 base_preset,
+                 random_parameters,
+                 save_audio,
+                 sample_rate,
+                 midi_note_pitch,
+                 midi_note_velocity,
+                 note_length_seconds,
+                 render_length_seconds):
 
         """
         Constructor
@@ -48,7 +48,7 @@ class DatasetGenerator():
         return engine
 
 
-    def generate(self, sample_size=None, file_prefix=""):
+    def generate(self, sample_size, file_prefix):
         # Create relevant folders if not existing
         if not os.path.exists(self.data_path):
             os.makedirs(self.data_path)
