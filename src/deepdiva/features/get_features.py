@@ -26,7 +26,7 @@ from deepdiva.features.feature_extractor import FeatureExtractor
               show_default=True, help='Length of the FFT window')
 @click.option('--win-length', 'win_length', default=None, required=False, type=int,
               show_default=True, help='Each frame of audio is windowed by window() and will be of length win_length and then padded with zeros. Defaults to win_length = n_fft')
-@click.option('--hop_length', 'hop_length', default=512, required=True, type=int,
+@click.option('--hop_length', 'hop_length', default=512, required=False, type=int,
               show_default=True, help='Number of samples between successive frames')
 @click.option('--n_mels', 'n_mels', default=128, required=False, type=int,
               show_default=True, help='Number of Mel bands to generate')
@@ -34,10 +34,10 @@ from deepdiva.features.feature_extractor import FeatureExtractor
               show_default=True, help='Number of MFCCs to return')
 @click.option('--sample-rate', 'sample_rate', default=44100, required=False, type=int,
               show_default=True, help='Sampling rate of the incoming signal')
-@click.option('--fmin', 'freq_min', default=0, required=False, type=int,
+@click.option('--fmin', 'freq_min', default=50, required=False, type=int,
               show_default=True, help='Lowest frequency (in Hz)')
-@click.option('--fmax', 'freq_max', default=None, required=False, type=int,
-              show_default=True, help='Highest frequency (in Hz), defaults to sample rate // 2')
+@click.option('--fmax', 'freq_max', default=15000, required=False, type=int,
+              show_default=True, help='Highest frequency (in Hz)')
 @click.option('--time-major/--no-time-major', 'time_major', default=True,
               show_default=True, help='Change MFCC to shape (time_slices, n_mfcc) for modelling')
 
@@ -74,7 +74,7 @@ def main(feature, data_path, data_file, file_prefix, saved_scaler, scaler_file, 
 
     if feature == "mfcc":
         mfcc = np.stack([extractor.mfcc(audio=audio[i], n_fft=n_fft, win_length=win_length, hop_length=hop_length,
-                                      n_mfcc=n_mels, sample_rate=sample_rate, freq_min=freq_min, freq_max=freq_max,
+                                      n_mfcc=n_mfcc, sample_rate=sample_rate, freq_min=freq_min, freq_max=freq_max,
                                       time_major=time_major) \
                          for i in range(audio.shape[0])], axis=0)
 
