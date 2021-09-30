@@ -39,11 +39,13 @@ def main(data_path, audio_file, spectrogram_file, show_spectrogram, show_audio):
         print(f"The shape of the audio file: {audio.shape}")
 
         # Plot 6 audio files
-        fig1 = plt.figure(num=1, figsize=(12, 6))
+        fig1 = plt.figure(num="Audio signal", figsize=(12, 6))
 
         for sp in range(6):
             plt.subplot(2, 3, sp+1)
-            plot_audio(audio[np.random.choice(audio.shape[0])])
+            sample = np.random.choice(audio.shape[0])
+            plot_audio(audio[sample])
+            plt.title(f"sample: {sample}")
 
         plt.show()
         plt.close()
@@ -55,11 +57,13 @@ def main(data_path, audio_file, spectrogram_file, show_spectrogram, show_audio):
         print(f"The shape of the mel spectrogram file: {spectrogram.shape}")
 
         # Plot 6 mel spectrograms
-        fig2 = plt.figure(num=2, figsize=(12, 6))
+        fig2 = plt.figure(num="Mel spectrogram", figsize=(12, 6))
 
         for sp in range(6):
             plt.subplot(2, 3, sp+1)
-            plot_mel(spectrogram[np.random.choice(spectrogram.shape[0])])
+            sample = np.random.choice(spectrogram.shape[0])
+            plot_mel(spectrogram[sample])
+            plt.title(f"sample: {sample}")
 
         plt.show()
         plt.close()
