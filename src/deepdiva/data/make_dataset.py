@@ -2,7 +2,6 @@
 import click
 import os
 import numpy as np
-from dotenv import find_dotenv, load_dotenv
 from deepdiva.data.dataset_generator import DatasetGenerator
 
 
@@ -83,9 +82,6 @@ def main(data_path, vst_path, folder_name, base_preset, random_parameters, save_
 
 if __name__ == '__main__':
 
-    # Find .env automatically by walking up directories until it's found, then
-    # load up the .env entries as environment variables
-    load_dotenv(find_dotenv())
-
     click_main()
+
 
