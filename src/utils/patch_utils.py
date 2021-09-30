@@ -180,3 +180,56 @@ def split_train_override_patch(patch, train_parameter_list:list):
     override_parameter_tuples = temp_overridden
     train_parameter_tuples = list(set(temp_trainable)-set(override_parameter_tuples))
     return override_parameter_tuples, train_parameter_tuples
+
+def get_randomization_small():
+    """
+    this function  provides a list with parameter names to randomize
+    this small sized set contains basic knobs of the ms20
+    :return: a list of integers ( parameter numbers)
+    """
+    random_parameters = [
+        86, 87, 89, 90, 91, 92, 97, 98, 131, 132 #oscillator section MS-20
+        140, 141, 148, 149, 155, #2 Filters ms-20
+        33, 34, 35 #Attack, Decay, Sustain of he ENV1
+    ]
+    return random_parameters
+
+def get_randomization_medium():
+    """
+    this function  provides a list with parameter names to randomize
+    this medium sized set contains basically all the knobs of the ms20 (substracting the modular part of it)
+    also, release parameters are not included because we do not record any release audio
+    :return: a list of integers ( parameter numbers)
+    """
+    random_parameters = [
+        86, 87, 89, 90, 91, 92, 97, 98, 131, 132 #oscillator section MS-20
+        140, 141, 148, 149, 155, #2 Filters ms-20
+        33, 34, 35 #Attack, Decay, Sustain of he ENV1
+        44, 45, 46, 47 #Attack, Decay, Sustain of he ENV2
+        104, 145, 151 #Env2 modulating Tune1, HPF and VCF1
+        55, 57, 62, #sync, rate and waveform LFO 1
+        65, 67, 72 # sync, rate and waveform LFO 2
+        106, 153 #LFO2 modulating Tune1 and VCF1
+    ]
+    return random_parameters
+
+def get_randomization_big():
+    """
+    this function  provides a list with parameter names to randomize
+    this big  set contains 124 parameters of the DIVA
+    it excludes everything about releases, key follows, the LFO's, the Effects Section
+    :return: a list of integers ( parameter numbers)
+    """
+    random_parameters = []
+    random_parameters.extend(range(4, 16))
+    random_parameters.extend([33, 34, 35])
+    random_parameters.extend(range(37, 43))
+    random_parameters.extend([44, 45, 46])
+    random_parameters.extend(range(48, 54))
+    random_parameters.extend(range(85, 143))
+    random_parameters.extend(range(144, 154))
+    random_parameters.extend(range(155, 167))
+    random_parameters.extend([169, 170, 171, 174])
+    random_parameters.extend(range(264, 271))
+    random_parameters.extend([278, 279, 280])
+    return random_parameters
