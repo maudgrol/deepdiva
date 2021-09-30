@@ -14,6 +14,9 @@ def plot_audio(audio):
 
     audio = audio.astype("float32")
     plt.plot(audio) # x = time; y = amplitude (loudness)
+    plt.xlabel("time")
+    plt.ylabel("amplitude")
+    plt.tight_layout()
 
 
 # Plot mel spectrogram
@@ -27,4 +30,7 @@ def plot_mel(spectrogram):
     """
 
     plt.imshow(spectrogram[:,:,0], cmap="inferno")
-    plt.axis("off")
+    plt.xticks([])
+    plt.yticks([])
+    plt.xlabel("time")
+    plt.ylabel("mel bands")
