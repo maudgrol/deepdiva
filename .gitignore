@@ -138,4 +138,4 @@ dmypy.json
 .vscode/
 
 # Do not save data files
-data/
+.data/
