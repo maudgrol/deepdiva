@@ -62,7 +62,6 @@ def main(data_path, audio_file, spectrogram_file, show_spectrogram, show_audio):
         plt.subplot(2, 3, 6)
         plot_audio(audio[np.random.choice(audio.shape[0])])
 
-        #plt.ion()
         plt.show()
         plt.close()
 
@@ -102,9 +101,5 @@ def main(data_path, audio_file, spectrogram_file, show_spectrogram, show_audio):
 
 
 if __name__ == '__main__':
-
-    # Find .env automatically by walking up directories until it's found, then
-    # load up the .env entries as environment variables
-    load_dotenv(find_dotenv())
 
     click_main()
