@@ -138,4 +138,5 @@ dmypy.json
 .vscode/
 
 # Do not save data files
-.data/
+data/
+!src/deepdiva/data/
