@@ -116,6 +116,9 @@ class DatasetGenerator():
                     self.sample_rate,
                     audio)
 
+        # Cut size audio array to exact length: sample_rate * render_length_seconds
+        audio_set = audio_set[:, :int(self.sample_rate * self.render_length_seconds)]
+
         # Save dataset
         np.save(os.path.join(self.data_path, self.folder_name, f"{file_prefix}audio.npy"), audio_set)
         np.save(os.path.join(self.data_path, self.folder_name, f"{file_prefix}patches.npy"), patch_set)
