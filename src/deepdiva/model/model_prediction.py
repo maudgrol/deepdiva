@@ -5,7 +5,7 @@ import numpy as np
 import tensorflow as tf
 import librosa
 import soundfile
-from deepdiva.data.dataset_generator import DatasetGenerator
+from deepdiva.features.feature_extractor import FeatureExtractor
 from deepdiva.model.lstm_model import LstmHighwayModel
 from deepdiva.model.cnn_model import ConvModel
 from deepdiva.utils.patch_utils import split_train_override_patch
@@ -41,7 +41,7 @@ from deepdiva.utils.h2p_utils import H2P
               required=False, type=float, show_default=True, help='Rendered audio length in seconds')
 @click.option('--feature', 'feature', type=click.Choice(['spectrogram', 'mfcc'], case_sensitive=False),
               required=True, show_default=True, help="Which type of feature to extract")
-@click.option('--scaler-file', 'scaler_file', default=None,
+@click.option('--scaler-file', 'scaler_file', default="train_mfcc_scaling.pickle",
               required=False, type=str, show_default=True, help='File name of saved data scaler object')
 @click.option('--n_fft', 'n_fft', default=2048, required=False, type=int,
               show_default=True, help='Length of the FFT window')
@@ -83,9 +83,10 @@ def main(data_path, audio_path, audio_file, vst_path, model_file, load_type, bas
 
     if audio_file == "all":
         # Decode all audio files in audio folder
-        audio = np.stack([wav_to_audio(os.path.join(audio_path, file), sample_rate) for file in os.listdir(audio_path) if file.endswith(".wav") and "prediction" not in file], axis=0)
+        audio = np.stack([wav_to_audio(os.path.join(audio_path, file), sample_rate, render_length_seconds) \
+                          for file in os.listdir(audio_path) if file.endswith(".wav") and "prediction" not in file], axis=0)
     else:
-        audio = wav_to_audio(os.path.join(audio_path, audio_file), sample_rate)
+        audio = wav_to_audio(os.path.join(audio_path, audio_file), sample_rate, render_length_seconds)
 
     # Extract features
     extractor = FeatureExtractor(data_path=data_path, saved_scaler=True, scaler_file=scaler_file)
@@ -106,9 +107,9 @@ def main(data_path, audio_path, audio_file, vst_path, model_file, load_type, bas
 
 
 # Decode .wav file to audio
-def wav_to_audio(file, sample_rate):
+def wav_to_audio(file, sample_rate, render_length_seconds):
     # Loading and decoding the wav file.
-    audio, _ = librosa.load(file, sr=sample_rate, mono=True, offset=0.0, duration=2.0)
+    audio, _ = librosa.load(file, sr=sample_rate, mono=True, offset=0.0, duration=render_length_seconds)
 
     audio = audio.astype("float32")
 
