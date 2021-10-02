@@ -1,66 +1,88 @@
 #!/usr/bin/env python
+import click
 import os
 import math
 import numpy as np
 import tensorflow as tf
 import matplotlib.pyplot as plt
+from datetime import datetime
+from deepdiva.utils.visualisation_utils import plot_loss
 from deepdiva.model.lstm_model import LstmHighwayModel
 from deepdiva.model.cnn_model import ConvModel
 from deepdiva.utils.model_utils import root_mean_squared_error
 
+date = datetime.now()
+date = date.strftime("%d/%m/%y_%H:%M:%S")
 
-DATA_PATH = "../../../data/dataset_18params"
-MODEL_PATH = "../../../models"
-MODEL_FILE = "cnn_training_01oct"
-BATCH_SIZE = 64
-TRAIN_FEATURES = "train_melspectrogram.npy"
-TEST_FEATURES = "test_melspectrogram.npy"
-TRAIN_TARGET = "train_patches.npy"
-TEST_TARGET = "train_patches.npy"
-SAVE_WEIGHTS = True
-SAVE_FREQ = 50
-SAVE_MODEL = True
-MODEL_TYPE = "cnn" #(or "lstm")
-OPTIMIZER = "adam"
-LOSS = "rmse"
-METRICS = ["mean_absolute_error", "mean_squared_error"]
-EPOCHS = 10
+@click.command()
+@click.option('--data-path', 'data_path', default="./data/dataset", required=False,
+              type=click.Path(), show_default=True, help='Path to data folder')
+@click.option('--model-path', 'model_path', default="./models/",
+              required=False, type=click.Path(), show_default=True, help='Path to model folder')
+@click.option('--folder-name', 'folder_name', default=f"training_{date}",
+              required=False, type=str, show_default=True, help='Folder name for saving model (weights)')
+@click.option('--model', 'model_type', type=click.Choice(['cnn', 'lstm'], case_sensitive=False),
+              required=True, show_default=True, help="Which type of pre-defined model to train")
+@click.option('--train_features', 'train_features', default="train_melspectrogram.npy",
+              required=False, type=str, show_default=True, help='File name of training features (.npy)')
+@click.option('--test_features', 'test_features', default="test_melspectrogram.npy",
+              required=False, type=str, show_default=True, help='File name of validation features (.npy)')
+@click.option('--train_target', 'train_target', default="train_patches.npy",
+              required=False, type=str, show_default=True, help='File name of training targets (.npy)')
+@click.option('--test_target', 'test_target', default="test_patches.npy",
+              required=False, type=str, show_default=True, help='File name of validations targets (.npy)')
+@click.option('--batch_size', 'batch_size', default=64, required=False,
+              type=int, show_default=True, help='Batch size')
+@click.option('--epochs', 'epochs', default=10, required=False,
+              type=int, show_default=True, help='The number of complete passes through the training dataset')
+@click.option('--save-model/--no-save-model', 'save_model', default=True,
+              show_default=True, help='Whether to save final model')
+@click.option('--save-weights/--no-save-weights', 'save_weights', default=True,
+              show_default=True, help='Whether to save model weights during training')
+@click.option('--save_freq', 'save_freq', default=50, required=False,
+              type=int, show_default=True, help='How often to save model weights (every n epochs)')
+@click.option('--optimizer', 'optimizer', default="adam",
+              required=False, type=str, show_default=True, help='Optimizer for model training (from tf.keras.optimizers)')
+@click.option('--loss', 'loss', default="rmse",
+              required=False, type=str, show_default=True, help='Loss function for model training')
+@click.option('--metrics', 'metrics', default=["mean_absolute_error"], multiple=True,
+              required=False, type=str, show_default=True, help='Metrics to track during model training')
 
 
+def click_main(data_path, model_path, folder_name, model_type, train_features, test_features,
+               train_target, test_target, batch_size, epochs, save_model, save_weights, save_freq,
+               optimizer, loss, metrics):
+    """
+    Interface for Click CLI.
+    """
+
+    main(data_path=data_path, model_path=model_path, folder_name=folder_name, model_type=model_type,
+         train_features=train_features, test_features=test_features, train_target=train_target,
+         test_target=test_target, batch_size=batch_size, epochs=epochs, save_model=save_model,
+         save_weights=save_weights, save_freq=save_freq, optimizer=optimizer, loss=loss, metrics=metrics)
 
 
-def main(model_type=MODEL_TYPE, data_path=DATA_PATH, model_path=MODEL_PATH, model_file=MODEL_FILE,
-         batch_size=BATCH_SIZE, train_features=TRAIN_FEATURES, test_features=TEST_FEATURES,
-         train_target=TRAIN_TARGET, test_target=TEST_TARGET, save_weights=SAVE_WEIGHTS, save_freq=SAVE_FREQ,
-         save_model=SAVE_MODEL, optimizer=OPTIMIZER, loss=LOSS, metrics=METRICS, epochs=EPOCHS):
+def main(data_path, model_path, folder_name, model_type, train_features, test_features, train_target, test_target,
+         batch_size, epochs, save_model, save_weights, save_freq, optimizer, loss, metrics):
+    """Runs model training script with predefined model architectures"""
 
     # If model folder does not exist, create it.
     if not os.path.exists(model_path):
         os.makedirs(model_path)
 
-    # Load training and validation features
-    train_x = np.load(os.path.join(data_path, test_features))
-    test_x = np.load(os.path.join(data_path, test_features))
-
-    # Load training and validation targets
-    train_y = np.load(os.path.join(data_path, train_target))
-    test_y = np.load(os.path.join(data_path, test_target))
-
-    # Infer input and number of outputs from data
-    shape = train_x.shape[1:]
-    num_outputs = train_y.shape[1]
-
     # Create tensorflow data sets
-    dataset_train_original = tf.data.Dataset.from_tensor_slices((trainMels, train_target))
-    dataset_validate_original = tf.data.Dataset.from_tensor_slices((testMels, test_target))
+    dataset_train_original = tf.data.Dataset.from_tensor_slices(
+        (np.load(os.path.join(data_path, train_features)), np.load(os.path.join(data_path, train_target))))
+    dataset_validate_original = tf.data.Dataset.from_tensor_slices(
+        (np.load(os.path.join(data_path, test_features)), np.load(os.path.join(data_path, test_target))))
 
     # Prepare datasets for model training: shuffle and batch
     dataset_train = dataset_train_original.cache().shuffle(10000).batch(batch_size)
-    dataset_validate = dataset_validate_original.cache().batch(batch_size) # No need to shuffle validation data
+    dataset_validate = dataset_validate_original.cache().batch(batch_size)
 
     # Define custom callback saving model weights every n epochs if True
     if save_weights:
-        checkpoint_path = os.path.join(model_path, f"{model_file}", "cp-{epoch:03d}.ckpt")
+        checkpoint_path = os.path.join(model_path, f"{folder_name}", "cp-{epoch:03d}.ckpt")
         cp_callback = tf.keras.callbacks.ModelCheckpoint(
             filepath=checkpoint_path,
             monitor="val_loss",
@@ -68,8 +90,12 @@ def main(model_type=MODEL_TYPE, data_path=DATA_PATH, model_path=MODEL_PATH, mode
             save_best_only=False,
             save_weights_only=True,
             mode="auto",
-            save_freq=save_freq*math.ceil(len(train_x) / batch_size)
+            save_freq=save_freq*math.ceil(len(dataset_train_original) / batch_size)
         )
+
+    # Infer input shape and number of outputs from data
+    shape = dataset_train_original.element_spec[0]._shape_tuple
+    num_outputs = dataset_train_original.element_spec[1].shape.dims[0].value
 
     # Initiate model
     if model_type == "cnn":
@@ -87,7 +113,9 @@ def main(model_type=MODEL_TYPE, data_path=DATA_PATH, model_path=MODEL_PATH, mode
 
     # Compile the model
     if loss == "rmse":
-        my_loss = root_mean_squared_error()
+        my_loss = root_mean_squared_error
+    else:
+        my_loss = loss
 
     model.compile(
         optimizer=optimizer,
@@ -108,8 +136,9 @@ def main(model_type=MODEL_TYPE, data_path=DATA_PATH, model_path=MODEL_PATH, mode
         model.save(os.path.join(model_path, f"{model_file}/final_model"))
 
     # Plot training and validation loss after completion of model
-    plt.plot(history.history["loss"], label="training loss")
-    plt.plot(history.history["val_loss"], label="validation loss")
-    plt.legend()
-    plt.show()
-    plt.close()
+    plot_loss(history)
+
+
+if __name__ == '__main__':
+
+    click_main()
