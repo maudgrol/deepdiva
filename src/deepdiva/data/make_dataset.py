@@ -2,7 +2,6 @@
 import click
 import os
 import numpy as np
-from dotenv import find_dotenv, load_dotenv
 from deepdiva.data.dataset_generator import DatasetGenerator
 
 
@@ -74,18 +73,15 @@ def main(data_path, vst_path, folder_name, base_preset, random_parameters, save_
 
     # Concatenate batch files and save
     total_audio = np.concatenate([np.load(os.path.join(data_path, folder_name, f"{file_prefix}{batch}_audio.npy")) \
-                                    for i in range(nr_batches)], axis=0)
+                                    for batch in range(nr_batches)], axis=0)
     total_patches = np.concatenate([np.load(os.path.join(data_path, folder_name, f"{file_prefix}{batch}_patches.npy")) \
-                                    for i in range(nr_batches)], axis=0)
+                                    for batch in range(nr_batches)], axis=0)
     np.save(os.path.join(data_path, folder_name, f"{file_prefix}audio.npy"), total_audio)
     np.save(os.path.join(data_path, folder_name, f"{file_prefix}patches.npy"), total_patches)
 
 
 if __name__ == '__main__':
 
-    # Find .env automatically by walking up directories until it's found, then
-    # load up the .env entries as environment variables
-    load_dotenv(find_dotenv())
-
     click_main()
+
 
