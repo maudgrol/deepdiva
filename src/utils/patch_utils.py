@@ -157,22 +157,79 @@ def patch_to_preset(patch, filename, header_dictionary=DEFAULT_HEADER):
             f.write("\n")
 
 
-def split_train_override_patch(patch, train_parameter_list):
-    '''This function takes a patch and a list of parameter indices and
-    returns 2 list of tuples: first a list containing only those tuples that are in the train_parameter_list,
-    and second a list of tuples with the remaining parameters
-    '''
+def split_train_override_patch(patch, train_parameter_list:list):
+    """
+    This function returns a list of tuples containing only those parameters that are in the train_parameter_list,
+    and a second list of tuples with the overridden parameters
+    :param patch: original patch - list of tuples
+    :param train_parameter_list: list of trainable parameters (parameter IDs)
+    :return: Two lists of tuples: overridden parameters, trainable parameters
+    """
 
-    #i use a set so that it is robust to a list that contains the same parameter twice (it will only erase it once)
-    plist = set(train_parameter_list)
+    # List of unique trainable parameters
+    param_list = set(train_parameter_list)
 
-    #since lists are mutable i need to make a copy now using list() will help make a real copy
-    patch_copy = list(patch)
+    # Create deep copies from original patch as to not edit original patch
+    temp_trainable = copy.deepcopy(patch)
+    temp_overridden = copy.deepcopy(patch)
 
-    #i sort the list so that it start removing from left to right, otherwise the indexing would be wrong
-    for i, tuples in enumerate(sorted(plist)):
-        patch.remove(patch[tuples-i])
+    # Remove trainable parameters from list of overridden parameters (from last to first)
+    for element in sorted(param_list, reverse=True):
+        temp_overridden.pop(element)
 
-    train_parameter_tuples = patch
-    override_parameter_tuples = list(set(patch_copy)-set(train_parameter_tuples))
+    override_parameter_tuples = temp_overridden
+    train_parameter_tuples = list(set(temp_trainable)-set(override_parameter_tuples))
     return override_parameter_tuples, train_parameter_tuples
+
+def get_randomization_small():
+    """
+    this function  provides a list with parameter names to randomize
+    this small sized set contains basic knobs of the ms20
+    :return: a list of integers ( parameter numbers)
+    """
+    random_parameters = [
+        86, 87, 89, 90, 91, 92, 97, 98, 131, 132 #oscillator section MS-20
+        140, 141, 148, 149, 155, #2 Filters ms-20
+        33, 34, 35 #Attack, Decay, Sustain of he ENV1
+    ]
+    return random_parameters
+
+def get_randomization_medium():
+    """
+    this function  provides a list with parameter names to randomize
+    this medium sized set contains basically all the knobs of the ms20 (substracting the modular part of it)
+    also, release parameters are not included because we do not record any release audio
+    :return: a list of integers ( parameter numbers)
+    """
+    random_parameters = [
+        86, 87, 89, 90, 91, 92, 97, 98, 131, 132 #oscillator section MS-20
+        140, 141, 148, 149, 155, #2 Filters ms-20
+        33, 34, 35 #Attack, Decay, Sustain of he ENV1
+        44, 45, 46, 47 #Attack, Decay, Sustain of he ENV2
+        104, 145, 151 #Env2 modulating Tune1, HPF and VCF1
+        55, 57, 62, #sync, rate and waveform LFO 1
+        65, 67, 72 # sync, rate and waveform LFO 2
+        106, 153 #LFO2 modulating Tune1 and VCF1
+    ]
+    return random_parameters
+
+def get_randomization_big():
+    """
+    this function  provides a list with parameter names to randomize
+    this big  set contains 124 parameters of the DIVA
+    it excludes everything about releases, key follows, the LFO's, the Effects Section
+    :return: a list of integers ( parameter numbers)
+    """
+    random_parameters = []
+    random_parameters.extend(range(4, 16))
+    random_parameters.extend([33, 34, 35])
+    random_parameters.extend(range(37, 43))
+    random_parameters.extend([44, 45, 46])
+    random_parameters.extend(range(48, 54))
+    random_parameters.extend(range(85, 143))
+    random_parameters.extend(range(144, 154))
+    random_parameters.extend(range(155, 167))
+    random_parameters.extend([169, 170, 171, 174])
+    random_parameters.extend(range(264, 271))
+    random_parameters.extend([278, 279, 280])
+    return random_parameters

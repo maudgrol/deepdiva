@@ -65,6 +65,10 @@ class LogMelSpectrogram(tf.keras.layers.Layer):
 
         log_mel_spectrograms = _power_to_db(mel_spectrograms)
 
+        # Normalize data
+        log_mel_spectrograms = tf.divide(tf.subtract(log_mel_spectrograms, tf.math.reduce_min(log_mel_spectrograms)),
+                                         tf.subtract(tf.math.reduce_max(log_mel_spectrograms),
+                                         tf.math.reduce_min(log_mel_spectrograms)))
         # add channel dimension; change order of time and frequency dimensions
         log_mel_spectrograms = tf.expand_dims(log_mel_spectrograms, axis=-1)
         log_mel_spectrograms = tf.transpose(log_mel_spectrograms, perm=(0, 2, 1, 3))
