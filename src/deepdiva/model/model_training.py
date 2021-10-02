@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 import click
+import sys
 import os
 import math
 import numpy as np
@@ -69,6 +70,13 @@ def main(data_path, model_path, folder_name, model_type, train_features, test_fe
     # If model folder does not exist, create it.
     if not os.path.exists(model_path):
         os.makedirs(model_path)
+
+    # Check that save frequency is not larger than number of epochs
+    if epochs < save_freq:
+        print("The frequency of saving model weights is larger than the total number of epochs.")
+        value = input("Do you want to continue anyway? y/n: ")
+        if value == "n":
+            sys.exit(0)
 
     # Create tensorflow data sets
     dataset_train_original = tf.data.Dataset.from_tensor_slices(
