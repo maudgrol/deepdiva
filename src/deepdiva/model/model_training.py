@@ -24,13 +24,13 @@ date = date.strftime("%d/%m/%y_%H:%M:%S")
               required=False, type=str, show_default=True, help='Folder name for saving model (weights)')
 @click.option('--model', 'model_type', type=click.Choice(['cnn', 'lstm'], case_sensitive=False),
               required=True, show_default=True, help="Which type of pre-defined model to train")
-@click.option('--train_features', 'train_features', default="train_melspectrogram.npy",
+@click.option('--train-features', 'train_features', default="train_melspectrogram.npy",
               required=False, type=str, show_default=True, help='File name of training features (.npy)')
-@click.option('--test_features', 'test_features', default="test_melspectrogram.npy",
+@click.option('--test-features', 'test_features', default="test_melspectrogram.npy",
               required=False, type=str, show_default=True, help='File name of validation features (.npy)')
-@click.option('--train_target', 'train_target', default="train_patches.npy",
+@click.option('--train-target', 'train_target', default="train_patches.npy",
               required=False, type=str, show_default=True, help='File name of training targets (.npy)')
-@click.option('--test_target', 'test_target', default="test_patches.npy",
+@click.option('--test-target', 'test_target', default="test_patches.npy",
               required=False, type=str, show_default=True, help='File name of validations targets (.npy)')
 @click.option('--batch_size', 'batch_size', default=64, required=False,
               type=int, show_default=True, help='Batch size')
