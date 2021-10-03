@@ -1,6 +1,6 @@
 #!/usr/bin/env python
-from utils.scale_functions import *
-from utils.norm_functions import *
+from deepdiva.utils.scale_functions import *
+from deepdiva.utils.norm_functions import *
 
 def get_row_to_parameter_dict():
     return              {'32': 0,

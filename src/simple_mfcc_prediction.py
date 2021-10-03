@@ -24,7 +24,7 @@ print(audio_mfcc.shape)
 
 #load the model and predict
 #apparently, if the prediction, which are originally float32, are not transformed into float64, they cannot render audio later....
-model = models.load_model(f"{PATH}model_linear")
+model = models.load_model(f"/Users/grahamherdman/Documents/data-science-retreat/deep-diva/deepdiva/api/model_linear")
 prediction = model.predict(audio_mfcc)[0].astype("float64")
 
 #join the predicted parameters with the overridden ones

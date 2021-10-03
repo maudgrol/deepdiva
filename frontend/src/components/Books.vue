@@ -4,7 +4,13 @@
       <div class="col-sm-10">
         <h1>Books</h1>
         <hr><br><br>
-        <button type="button" class="btn btn-success btn-sm">Add Book</button>
+        <button
+          type="button"
+          class="btn btn-success btn-sm"
+          @click.prevent="addBook"
+        >
+          Add Book
+        </button>
         <br><br>
         <table class="table table-hover">
           <thead>
@@ -56,6 +62,23 @@ export default {
         .catch((error) => {
           // eslint-disable-next-line
           console.error(error);
+        });
+    },
+    addBook() {
+      const payload = {
+        title: 'title',
+        author: 'author',
+      };
+
+      const path = 'http://localhost:5000/books';
+      axios.post(path, payload)
+        .then(() => {
+          this.getBooks();
+        })
+        .catch((error) => {
+          // eslint-disable-next-line
+          console.log(error);
+          this.getBooks();
         });
     },
   },

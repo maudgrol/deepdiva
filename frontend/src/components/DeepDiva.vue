@@ -98,6 +98,30 @@ export default {
     removeFile() {
       this.files = [];
     },
+    downloadFile(response) {
+      const fileURL = window.URL.createObjectURL(new Blob([response.data]));
+      const fileLink = document.createElement('a');
+
+      fileLink.href = fileURL;
+      fileLink.setAttribute('download', 'h2p_file.h2p');
+      document.body.appendChild(fileLink);
+
+      fileLink.click();
+    },
+    createDataAndConfig() {
+      // create wav file to send to backend
+      const data = new FormData();
+      const file = new Blob([this.files[0].file]);
+
+      data.append('wavfile', file);
+      data.append('start', this.start);
+
+      const config = {
+        headers: { 'Content-Type': 'multipart/form-data' },
+      };
+
+      return [data, config];
+    },
     async getH2pFile() {
       this.loading = true;
 
@@ -106,40 +130,15 @@ export default {
           // eslint-disable-next-line
           alert("Please upload a file and choose a start time");
         } else {
-          // eslint-disable-next-line
-          console.log(this.files)
+          const [data, config] = this.createDataAndConfig();
 
-          // create wav file to send to backend
-          const data = new FormData();
-          const file = new Blob(this.files);
-
-          data.append('wavfile', file, file.name);
-          data.append('start', this.start);
-
-          const config = {
-            headers: { 'content-type': 'multipart/form-data' },
-          };
-
-          const payload = {
-            wavfile: file,
-            start: 100,
-          };
-
-          // send wav file to the backend and process h2p file download
-          await axios.post(PREDICTION_PATH, payload, config)
+          await axios.post(PREDICTION_PATH, data, config)
             .then((response) => {
-              const fileURL = window.URL.createObjectURL(new Blob([response.data]));
-              const fileLink = document.createElement('a');
-
-              fileLink.href = fileURL;
-              fileLink.setAttribute('download', 'h2p_file.h2p');
-              document.body.appendChild(fileLink);
-
-              fileLink.click();
+              this.downloadFile(response);
             })
             .catch((error) => {
               // eslint-disable-next-line
-              console.error(error);
+              alert(error.response.data["Message"])
             });
         }
       } catch (error) {

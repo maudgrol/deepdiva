@@ -188,9 +188,9 @@ def get_randomization_small():
     :return: a list of integers ( parameter numbers)
     """
     random_parameters = [
-        86, 87, 89, 90, 91, 92, 97, 98, 131, 132 #oscillator section MS-20
-        140, 141, 148, 149, 155, #2 Filters ms-20
-        33, 34, 35 #Attack, Decay, Sustain of he ENV1
+        33, 34, 35, #Attack, Decay, Sustain of he ENV1
+        86, 87, 89, 90, 91, 92, 97, 98, 131, 132, #oscillator section MS-20
+        140, 141, 148, 149, 155 #2 Filters ms-20
     ]
     return random_parameters
 
@@ -202,14 +202,14 @@ def get_randomization_medium():
     :return: a list of integers ( parameter numbers)
     """
     random_parameters = [
-        86, 87, 89, 90, 91, 92, 97, 98, 131, 132 #oscillator section MS-20
-        140, 141, 148, 149, 155, #2 Filters ms-20
-        33, 34, 35 #Attack, Decay, Sustain of he ENV1
-        44, 45, 46, 47 #Attack, Decay, Sustain of he ENV2
-        104, 145, 151 #Env2 modulating Tune1, HPF and VCF1
+        33, 34, 35, #Attack, Decay, Sustain of he ENV1
+        44, 45, 46, 47, #Attack, Decay, Sustain of he ENV2
         55, 57, 62, #sync, rate and waveform LFO 1
-        65, 67, 72 # sync, rate and waveform LFO 2
-        106, 153 #LFO2 modulating Tune1 and VCF1
+        65, 67, 72, # sync, rate and waveform LFO 2
+        86, 87, 89, 90, 91, 92, 97, 98, 131, 132, #oscillator section MS-20
+        104, 145, 151, #Env2 modulating Tune1, HPF and VCF1
+        106, 153, #LFO2 modulating Tune1 and VCF1
+        140, 141, 148, 149, 155 #2 Filters ms-20
     ]
     return random_parameters
 
