@@ -90,7 +90,7 @@ def main(data_path, model_path, folder_name, model_type, train_features, test_fe
 
     # Define custom callback saving model weights every n epochs if True
     if save_weights:
-        checkpoint_path = os.path.join(model_path, f"{folder_name}", "cp-{epoch:03d}.ckpt")
+        checkpoint_path = os.path.join(model_path, f"{folder_name}", "cp-{epoch:04d}.ckpt")
         cp_callback = tf.keras.callbacks.ModelCheckpoint(
             filepath=checkpoint_path,
             monitor="val_loss",
