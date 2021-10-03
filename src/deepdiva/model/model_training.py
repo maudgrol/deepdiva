@@ -13,7 +13,7 @@ from deepdiva.model.cnn_model import ConvModel
 from deepdiva.utils.model_utils import root_mean_squared_error
 
 date = datetime.now()
-date = date.strftime("%d/%m/%y_%H:%M:%S")
+date = date.strftime("%d-%m-%y_%H:%M:%S")
 
 @click.command()
 @click.option('--data-path', 'data_path', default="./data/dataset", required=False,
@@ -141,7 +141,7 @@ def main(data_path, model_path, folder_name, model_type, train_features, test_fe
 
     # Save final model if True
     if save_model:
-        model.save(os.path.join(model_path, f"{model_file}/final_model"))
+        model.save(os.path.join(model_path, f"{folder_name}/final_model"))
 
     # Plot training and validation loss after completion of model
     plot_loss(history)
