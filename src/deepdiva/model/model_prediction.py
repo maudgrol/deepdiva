@@ -5,6 +5,9 @@ import numpy as np
 import tensorflow as tf
 import librosa
 import soundfile
+import copy
+import librenderman as rm
+import scipy.io.wavfile
 from deepdiva.features.feature_extractor import FeatureExtractor
 from deepdiva.model.lstm_model import LstmHighwayModel
 from deepdiva.model.cnn_model import ConvModel
@@ -17,18 +20,16 @@ from deepdiva.utils.h2p_utils import H2P
               type=click.Path(exists=True), show_default=True, help='Path to data folder')
 @click.option('--audio-path', 'audio_path', default="./data/dataset/audio", required=False,
               type=click.Path(exists=True), show_default=True, help='Path to audio folder')
-@click.option('--audio_file', 'audio_file', default="all", required=False, type=str,
-              show_default=True, help='Specific input .wav file or all .wav files in audio folder')
+@click.option('--audio_file', 'audio_file', required=True, type=str,
+              show_default=True, help='Input .wav file in audio folder')
 @click.option('--vst-path', 'vst_path', default="/Library/Audio/Plug-Ins/VST/u-he/Diva.vst",
               required=False, type=click.Path(exists=True), show_default=True, help='Path to vst plugin')
 @click.option('--model-file', 'model_file', required=False, type=click.Path(exists=True),
-              show_default=False, help='Path to model file or model weights checkpoint')
-@click.option('--load_type', 'load_type', type=click.Choice(['model', 'weights'], case_sensitive=False),
-              default='model', required=True, show_default=True, help="Load model object or model weights")
+              show_default=False, help='Path to model file')
 @click.option('--base-preset', 'base_preset', default="MS-REV1_deepdiva.h2p", required=False,
               type=str, show_default=True, help='DIVA preset that serves as base for fixed parameters')
 @click.option('--random-parameters', 'random_parameters', type=str, default="",
-              show_default=True, help="Indices of to be randomized parameters. Format: 'id id'")
+              show_default=True, help="Indices of to be randomized parameters (ascending order). Format: 'id id'")
 @click.option('--sample-rate', 'sample_rate', default=44100, required=False,
               type=int, show_default=True, help='Sample rate for audio')
 @click.option('--midi-note-pitch', 'midi_note_pitch', default=48, required=False,
@@ -61,7 +62,7 @@ from deepdiva.utils.h2p_utils import H2P
               show_default=True, help='Change MFCC to shape (time_slices, n_mfcc) for modelling')
 
 
-def click_main(data_path, audio_path, audio_file, vst_path, model_file, load_type, base_preset, random_parameters,
+def click_main(data_path, audio_path, audio_file, vst_path, model_file, base_preset, random_parameters,
                sample_rate, midi_note_pitch, midi_note_velocity, note_length_seconds, render_length_seconds, feature,
                scaler_file, n_fft, win_length, hop_length, n_mels, n_mfcc, freq_min, freq_max, time_major):
     """
@@ -69,51 +70,96 @@ def click_main(data_path, audio_path, audio_file, vst_path, model_file, load_typ
     """
 
     main(data_path=data_path, audio_path=audio_path, audio_file=audio_file, vst_path=vst_path, model_file=model_file,
-         load_type=load_type, base_preset=base_preset, random_parameters=random_parameters, sample_rate=sample_rate,
+         base_preset=base_preset, random_parameters=random_parameters, sample_rate=sample_rate,
          midi_note_pitch=midi_note_pitch, midi_note_velocity=midi_note_velocity, note_length_seconds=note_length_seconds,
          render_length_seconds=render_length_seconds, feature=feature, scaler_file=scaler_file, n_fft=n_fft,
          win_length=win_length, hop_length=hop_length, n_mels=n_mels, n_mfcc=n_mfcc, freq_min=freq_min,
          freq_max=freq_max, time_major=time_major)
 
 
-def main(data_path, audio_path, audio_file, vst_path, model_file, load_type, base_preset, random_parameters,
+def main(data_path, audio_path, audio_file, vst_path, model_file, base_preset, random_parameters,
                sample_rate, midi_note_pitch, midi_note_velocity, note_length_seconds, render_length_seconds, feature,
                scaler_file, n_fft, win_length, hop_length, n_mels, n_mfcc, freq_min, freq_max, time_major):
     """Runs model prediction script """
 
-    if audio_file == "all":
-        # Decode all audio files in audio folder
-        audio = np.stack([wav_to_audio(os.path.join(audio_path, file), sample_rate, render_length_seconds) \
-                          for file in os.listdir(audio_path) if file.endswith(".wav") and "prediction" not in file], axis=0)
-    else:
-        audio = wav_to_audio(os.path.join(audio_path, audio_file), sample_rate, render_length_seconds)
+    audio = wav_to_audio(os.path.join(audio_path, audio_file), sample_rate, render_length_seconds)
 
     # Extract features
     extractor = FeatureExtractor(data_path=data_path, saved_scaler=True, scaler_file=scaler_file)
 
     if feature == "spectrogram":
-        features = np.stack([extractor.melspectrogram(audio=audio[i], n_fft=n_fft, win_length=win_length,
-                                                         hop_length=hop_length, n_mels=n_mels, sample_rate=sample_rate,
-                                                         freq_min=freq_min, freq_max=freq_max) \
-                                for i in range(audio.shape[0])], axis=0)
+        features = extractor.melspectrogram(audio=audio, n_fft=n_fft, win_length=win_length, hop_length=hop_length,
+                                            n_mels=n_mels, sample_rate=sample_rate, freq_min=freq_min,
+                                            freq_max=freq_max)
 
     if feature == "mfcc":
-        features = np.stack([extractor.mfcc(audio=audio[i], n_fft=n_fft, win_length=win_length, hop_length=hop_length,
-                                        n_mfcc=n_mfcc, sample_rate=sample_rate, freq_min=freq_min, freq_max=freq_max,
-                                        time_major=time_major) \
-                         for i in range(audio.shape[0])], axis=0)
+        features = extractor.mfcc(audio=audio, n_fft=n_fft, win_length=win_length, hop_length=hop_length,
+                                  n_mfcc=n_mfcc, sample_rate=sample_rate, freq_min=freq_min, freq_max=freq_max,
+                                  time_major=time_major)
 
-    np.save(os.path.join(data_path, "eval_features.npy"), features)
+    # Load model
+    model = tf.keras.models.load_model(model_file)
+
+    # Model prediction - add a dimension for samples
+    prediction = model.predict(tf.expand_dims(features, axis=0))[0].astype("float64")
+
+    # Use the predicted values for randomized parameters
+    predicted_parameters = list(zip(random_parameters, prediction))
+
+    # Join predicted parameters with overridden parameters that are based on base preset
+    used_base_preset = os.path.join(data_path, base_preset)
+    h2p = H2P()
+    base_patch = h2p.preset_to_patch(h2p_filename=used_base_preset)
+
+    overridden_parameters, _ = split_train_override_patch(base_patch, random_parameters)
+
+    overridden_parameters.extend(predicted_parameters)
+    overridden_parameters.sort()
+    full_predicted_patch = copy.deepcopy(overridden_parameters)
+
+    # Save preset from the predicted patch
+    preset = h2p.patch_to_preset(patch=full_predicted_patch,
+                                 h2p_filename=os.path.join(data_path, f"predicted_preset.h2p"))
+    print(f"The created DIVA preset 'predicted_preset.h2p' was saved in {data_path}")
+
+    # Render and save audio of the predicted patch
+    patch_to_wav()
+    print(f"The predicted sound file 'predicted_{audio_file}' was saved in {audio_path}")
 
 
-# Decode .wav file to audio
 def wav_to_audio(file, sample_rate, render_length_seconds):
-    # Loading and decoding the wav file.
+    """
+    Loading and decoding the input wav file
+    """
     audio, _ = librosa.load(file, sr=sample_rate, mono=True, offset=0.0, duration=render_length_seconds)
 
     audio = audio.astype("float32")
 
     return audio
+
+
+def patch_to_wav(vst_path=vst_path, patch=full_predicted_patch, sample_rate=sample_rate, midi_note_pitch=midi_note_pitch,
+             midi_note_velocity=midi_note_velocity, note_length_seconds=note_length_seconds,
+             render_length_seconds=render_length_seconds):
+    """
+    Render audio from predicted patch and save .wav file
+    """
+    # Configure synthesizer
+    engine = rm.RenderEngine(sample_rate, 512, 512)
+    engine.load_plugin(vst_path)
+
+    # Set patch to predicted patch
+    engine.set_patch(patch)
+
+    # Render the patch
+    engine.render_patch(midi_note_pitch, midi_note_velocity, note_length_seconds, render_length_seconds)
+
+    # Get decoded audio
+    audio = engine.get_audio_frames()
+    audio = np.array(audio, copy=True, dtype=np.float32)
+
+    # Save .wav file based on audio
+    scipy.io.wavfile.write(os.path.join(audio_path, f"predicted_{audio_file}"), sample_rate, audio)
 
 
 if __name__ == '__main__':
