@@ -181,6 +181,33 @@ def split_train_override_patch(patch, train_parameter_list:list):
     train_parameter_tuples = list(set(temp_trainable)-set(override_parameter_tuples))
     return override_parameter_tuples, train_parameter_tuples
 
+def get_randomization_tiny4():
+    """
+    this function  provides a list with parameter names to randomize
+    this small sized set contains basic knobs of the ms20
+    :return: a list of integers ( parameter numbers)
+    """
+    random_parameters = [
+        86, 131,  #oscillator section MS-20
+        148, 149 #2 Filters ms-20
+    ]
+    return random_parameters
+
+
+def get_randomization_tiny11():
+    """
+    this function  provides a list with parameter names to randomize
+    this small sized set contains basic knobs of the ms20
+    :return: a list of integers ( parameter numbers)
+    """
+    random_parameters = [
+        33, 34, 35,  # Attack, Decay, Sustain of he ENV1
+        86, 87, 97, 98, 131, 132, #oscillator section MS-20
+        148, 149 #2 Filters ms-20
+    ]
+    return random_parameters
+
+
 def get_randomization_small():
     """
     this function  provides a list with parameter names to randomize
