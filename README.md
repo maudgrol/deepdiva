@@ -163,7 +163,6 @@ Options:
 ```
 
 An example of extracting normalized mel spectrogram features and setting some options:
-
 ```angular2html
 python src/deepdiva/features/get_features.py --feature "spectrogram" --data-path "./data/dataset" --data-file "train_audio.npy" --file-prefix "train_" --fmax 20000
 ```
@@ -179,13 +178,51 @@ python src/deepdiva/features/get_features.py --feature "mfcc" --data-path "./dat
 
 To train on of our predefined models based on your own dataset and extracted features, you can check out all the possible settings you can pass when
 running model_training.py:
-
 ```angular2html
 python src/deepdiva/model/model_training.py --help
 
+Usage: model_training.py [OPTIONS]
 
+  Interface for Click CLI.
 
+Options:
+  --data-path PATH                Path to data folder  [default:
+                                  ./data/dataset]
+  --model-path PATH               Path to model folder  [default: ./models/]
+  --folder-name TEXT              Folder name for saving model (weights)
+                                  [default: training_<date>_<time>]
+  --model [cnn|lstm]              Which type of pre-defined model to train
+                                  [required]
+  --train-features TEXT           File name of training features (.npy)
+                                  [default: train_melspectrogram.npy]
+  --test-features TEXT            File name of validation features (.npy)
+                                  [default: test_melspectrogram.npy]
+  --train-target TEXT             File name of training targets (.npy)
+                                  [default: train_patches.npy]
+  --test-target TEXT              File name of validations targets (.npy)
+                                  [default: test_patches.npy]
+  --batch_size INTEGER            Batch size  [default: 64]
+  --epochs INTEGER                The number of complete passes through the
+                                  training dataset  [default: 10]
+  --save-model / --no-save-model  Whether to save final model  [default: save-
+                                  model]
+  --save-weights / --no-save-weights
+                                  Whether to save model weights during
+                                  training  [default: save-weights]
+  --save_freq INTEGER             How often to save model weights (every n
+                                  epochs)  [default: 50]
+  --optimizer TEXT                Optimizer for model training (from
+                                  tf.keras.optimizers)  [default: adam]
+  --loss TEXT                     Loss function for model training  [default:
+                                  rmse]
+  --metrics TEXT                  Metrics to track during model training
+                                  [default: mean_absolute_error]
+  --help                          Show this message and exit.
+```
 
+An example of training a convolutional neural network model for 50 epochs, with the default train and test data file names, and saving the model weights every 10 epochs:
+```angular2html
+python src/deepdiva/model/model_training.py --data-path "./data/dataset" --model cnn --batch-size 64 --epochs 50 --save-freq 10 --loss "rmse" --metrics "mean_absolute_error"
 ```
 
 
