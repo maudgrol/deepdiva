@@ -100,7 +100,7 @@ LSTM and Convolutional Neural Network architectures respectively.
 ### Mel-frequency cepstral coefficients
 
 The number of MFCCs to return was set to 13, the length of the Fast Fourier Transform window was set to 2048, with the
-number of samples between successive frames set to 1024. We set a time_major argument to True so that the orientation of
+number of samples between successive frames set to 1024. The lowest frequency and highest frequency (in Hz) were set to 50 and 15000 respectively. We set a time_major argument to True so that the orientation of
 the output is (time_slices, features), which can be used in a LSTM model architecture. We normalized the MFCC dataset
 based on the training dataset, rescaling the range of the data to [0,1]. The scaling information is saved in a pickle
 file to be re-used on the validation dataset and on new data. The MFCC features are saved under 'mfcc.npy'.
@@ -109,7 +109,7 @@ file to be re-used on the validation dataset and on new data. The MFCC features 
 
 The number of Mel bands to generate was set to 128. The length of the Fast Fourier Transform window was set to 2048,
 with the number of samples between successive frames set to 512. Each frame of audio was windowed by a Hann window of
-length 2048. The lowest frequency and highest frequency (in Hz) were set to 0 and 20000 respectively. The mel-scaled
+length 2048. The lowest frequency and highest frequency (in Hz) were set to 50 and 15000 respectively. The mel-scaled
 power spectrogram uses the decibel scale and was normalized to values ranging between [0,1]. An extra dimension was added for channel so the
 output is of shape (n_mels, time, channels), which can be used in a Convolutional Neural Network architecture. The mel
 frequency band axis was flipped so low frequencies are at the bottom of the created mel spectrogram. The mel-scaled
@@ -177,11 +177,25 @@ python src/deepdiva/features/get_features.py --feature "mfcc" --data-path "./dat
 
 ## Model training
 
-To train our models based on your own dataset and extracted features, run the following:
+To train on of our predefined models based on your own dataset and extracted features, you can check out all the possible settings you can pass when
+running model_training.py:
 
 ```angular2html
-python src/deepdiva/model/model_training.py
+python src/deepdiva/model/model_training.py --help
+
+
+
+
 ```
+
+
+
+
+
+
+
+
+
 
 ## Project organization
 
