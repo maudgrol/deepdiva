@@ -3,7 +3,6 @@ import click
 import os
 import pickle
 import numpy as np
-from dotenv import find_dotenv, load_dotenv
 from deepdiva.features.feature_extractor import FeatureExtractor
 
 
@@ -94,9 +93,5 @@ def main(feature, data_path, data_file, file_prefix, saved_scaler, scaler_file, 
 
 
 if __name__ == '__main__':
-
-    # Find .env automatically by walking up directories until it's found, then
-    # load up the .env entries as environment variables
-    load_dotenv(find_dotenv())
 
     click_main()
