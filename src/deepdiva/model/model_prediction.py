@@ -13,6 +13,7 @@ from deepdiva.model.lstm_model import LstmHighwayModel
 from deepdiva.model.cnn_model import ConvModel
 from deepdiva.utils.patch_utils import split_train_override_patch
 from deepdiva.utils.h2p_utils import H2P
+from deepdiva.utils.model_utils import root_mean_squared_error
 
 
 @click.command()
