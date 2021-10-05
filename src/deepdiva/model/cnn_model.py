@@ -51,15 +51,18 @@ class ConvModel(tf.keras.Model):
                                         name="MaxPool_4")
 
         # Fully connected layers and dropout
-        self.dropout1 = layers.Dropout(rate=0.2,
-                                       name="Dropout_1")
         self.flatten = layers.Flatten(name="Flatten_1")
-        self.fc1 = layers.Dense(units=256,
+        self.fc1 = layers.Dense(units=128,
                                 activation="relu",
                                 name="Dense_1")
-        self.dropout2 = layers.Dropout(rate=0.4,
+        self.dropout1 = layers.Dropout(rate=0.3,
+                                       name="Dropout_1")
+        self.fc2 = layers.Dense(units=64,
+                                activation="relu",
+                                name="Dense_2")
+        self.dropout2 = layers.Dropout(rate=0.3,
                                        name="Dropout_2")
-        self.fc2 = layers.Dense(units=num_outputs,
+        self.fc3 = layers.Dense(units=num_outputs,
                                 activation="linear",
                                 name="Output_layer")
 
@@ -90,8 +93,9 @@ class ConvModel(tf.keras.Model):
         x = self.max4(x)
 
         # forward pass: dense layers, dropout and output
-        x = self.dropout1(x, training=training)
         x = self.flatten(x)
         x = self.fc1(x)
+        x = self.dropout1(x, training=training)
+        x = self.fc2(x)
         x = self.dropout2(x, training=training)
-        return self.fc2(x)
+        return self.fc3(x)
