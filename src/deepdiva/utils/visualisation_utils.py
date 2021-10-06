@@ -34,3 +34,20 @@ def plot_mel(spectrogram):
     plt.yticks([])
     plt.xlabel("time")
     plt.ylabel("mel bands")
+
+
+# Plot loss and validation loss after model training
+def plot_loss(history):
+    """
+    Args:
+        history: tf.keras.callbacks.History
+
+    Returns: Visualisation of the loss and validation loss across training epochs
+
+    """
+
+    plt.plot(history.history["loss"], label="training loss")
+    plt.plot(history.history["val_loss"], label="validation loss")
+    plt.legend()
+    plt.show()
+    plt.close()

@@ -3,7 +3,6 @@ import click
 import os
 import pickle
 import numpy as np
-from dotenv import find_dotenv, load_dotenv
 from deepdiva.features.feature_extractor import FeatureExtractor
 
 
@@ -22,15 +21,15 @@ from deepdiva.features.feature_extractor import FeatureExtractor
               required=False, type=str, show_default=True, help='File name of saved data scaler object')
 @click.option('--scale-axis', 'scale_axis', default=0, required=False, show_default=True,
               help='Axis or axes to use for calculating scaling parameteres. Defaults to 0, which scales each MFCC and time series component independently.')
-@click.option('--n_fft', 'n_fft', default=2048, required=False, type=int,
+@click.option('--n-fft', 'n_fft', default=2048, required=False, type=int,
               show_default=True, help='Length of the FFT window')
 @click.option('--win-length', 'win_length', default=None, required=False, type=int,
               show_default=True, help='Each frame of audio is windowed by window() and will be of length win_length and then padded with zeros. Defaults to win_length = n_fft')
-@click.option('--hop_length', 'hop_length', default=512, required=False, type=int,
+@click.option('--hop-length', 'hop_length', default=512, required=False, type=int,
               show_default=True, help='Number of samples between successive frames')
-@click.option('--n_mels', 'n_mels', default=128, required=False, type=int,
+@click.option('--n-mels', 'n_mels', default=128, required=False, type=int,
               show_default=True, help='Number of Mel bands to generate')
-@click.option('--n_mfcc', 'n_mfcc', default=13, required=False, type=int,
+@click.option('--n-mfcc', 'n_mfcc', default=13, required=False, type=int,
               show_default=True, help='Number of MFCCs to return')
 @click.option('--sample-rate', 'sample_rate', default=44100, required=False, type=int,
               show_default=True, help='Sampling rate of the incoming signal')
@@ -94,9 +93,5 @@ def main(feature, data_path, data_file, file_prefix, saved_scaler, scaler_file, 
 
 
 if __name__ == '__main__':
-
-    # Find .env automatically by walking up directories until it's found, then
-    # load up the .env entries as environment variables
-    load_dotenv(find_dotenv())
 
     click_main()
