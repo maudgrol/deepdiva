@@ -17,19 +17,19 @@ from deepdiva.utils.model_utils import root_mean_squared_error
 
 
 @click.command()
-@click.option('--data-path', 'data_path', default="./data/dataset", required=False,
+@click.option('--data-path', 'data_path', default="./data", required=False,
               type=click.Path(exists=True), show_default=True, help='Path to data folder')
 @click.option('--audio-path', 'audio_path', default="./data/dataset/audio", required=False,
               type=click.Path(exists=True), show_default=True, help='Path to audio folder')
-@click.option('--audio_file', 'audio_file', required=True, type=str,
+@click.option('--audio-file', 'audio_file', required=True, type=str,
               show_default=True, help='Input .wav file in audio folder')
 @click.option('--vst-path', 'vst_path', default="/Library/Audio/Plug-Ins/VST/u-he/Diva.vst",
               required=False, type=click.Path(exists=True), show_default=True, help='Path to vst plugin')
 @click.option('--model-file', 'model_file', required=False, type=click.Path(exists=True),
-              show_default=False, help='Path to model file')
+              default="./models/cnn_melspectrogram_11params", show_default=True, help='Path to model file')
 @click.option('--base-preset', 'base_preset', default="MS-REV1_deepdiva.h2p", required=False,
               type=str, show_default=True, help='DIVA preset that serves as base for fixed parameters')
-@click.option('--random-parameters', 'random_parameters', type=str, default="",
+@click.option('--random-parameters', 'random_parameters', type=str, default= "33 34 35 86 87 97 98 131 132 148 149",
               show_default=True, help="Indices of to be randomized parameters (ascending order). Format: 'id id'")
 @click.option('--sample-rate', 'sample_rate', default=44100, required=False,
               type=int, show_default=True, help='Sample rate for audio')
@@ -42,7 +42,7 @@ from deepdiva.utils.model_utils import root_mean_squared_error
 @click.option('--render-length-seconds', 'render_length_seconds', default=2.0,
               required=False, type=float, show_default=True, help='Rendered audio length in seconds')
 @click.option('--feature', 'feature', type=click.Choice(['spectrogram', 'mfcc'], case_sensitive=False),
-              required=True, show_default=True, help="Which type of feature to extract")
+              default='spectrogram', required=False, show_default=True, help="Which type of feature to extract")
 @click.option('--scaler-file', 'scaler_file', default="train_mfcc_scaling.pickle",
               required=False, type=str, show_default=True, help='File name of saved data scaler object')
 @click.option('--n_fft', 'n_fft', default=2048, required=False, type=int,
@@ -69,6 +69,9 @@ def click_main(data_path, audio_path, audio_file, vst_path, model_file, base_pre
     """
     Interface for Click CLI.
     """
+    # Create a list of integers of parameters to randomize from random_parameters string variable
+    random_parameters = random_parameters.split()
+    random_parameters = [int(x) for x in random_parameters]
 
     main(data_path=data_path, audio_path=audio_path, audio_file=audio_file, vst_path=vst_path, model_file=model_file,
          base_preset=base_preset, random_parameters=random_parameters, sample_rate=sample_rate,
@@ -98,8 +101,10 @@ def main(data_path, audio_path, audio_file, vst_path, model_file, base_preset, r
                                   n_mfcc=n_mfcc, sample_rate=sample_rate, freq_min=freq_min, freq_max=freq_max,
                                   time_major=time_major)
 
-    # Load model
-    model = tf.keras.models.load_model(model_file)
+    # Load final model or model weigths
+    # model = tf.keras.models.load_model(model_file)
+    model = ConvModel(shape=(128, 173, 1), num_outputs=11)
+    model.load_weights(os.path.join(model_file, "cp-0075.ckpt")).expect_partial()
 
     # Model prediction - add a dimension for samples
     prediction = model.predict(tf.expand_dims(features, axis=0))[0].astype("float64")
@@ -121,10 +126,14 @@ def main(data_path, audio_path, audio_file, vst_path, model_file, base_preset, r
     # Save preset from the predicted patch
     preset = h2p.patch_to_preset(patch=full_predicted_patch,
                                  h2p_filename=os.path.join(data_path, f"predicted_preset.h2p"))
-    print(f"The created DIVA preset 'predicted_preset.h2p' was saved in {data_path}")
+
 
     # Render and save audio of the predicted patch
-    patch_to_wav()
+    patch_to_wav(audio_path=audio_path, audio_file=audio_file, vst_path=vst_path, patch=full_predicted_patch,
+                 sample_rate=sample_rate, midi_note_pitch=midi_note_pitch, midi_note_velocity=midi_note_velocity,
+                 note_length_seconds=note_length_seconds, render_length_seconds=render_length_seconds)
+
+    print(f"The created DIVA preset 'predicted_preset.h2p' was saved in {data_path}")
     print(f"The predicted sound file 'predicted_{audio_file}' was saved in {audio_path}")
 
 
@@ -139,9 +148,8 @@ def wav_to_audio(file, sample_rate, render_length_seconds):
     return audio
 
 
-def patch_to_wav(vst_path=vst_path, patch=full_predicted_patch, sample_rate=sample_rate, midi_note_pitch=midi_note_pitch,
-             midi_note_velocity=midi_note_velocity, note_length_seconds=note_length_seconds,
-             render_length_seconds=render_length_seconds):
+def patch_to_wav(audio_path, audio_file, vst_path, patch, sample_rate, midi_note_pitch, midi_note_velocity, note_length_seconds,
+                 render_length_seconds):
     """
     Render audio from predicted patch and save .wav file
     """
