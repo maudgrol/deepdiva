@@ -1,6 +1,6 @@
 # deepDIVA
 
-In this project we aim to create a deep-learning syntheziser programmer using the vst plugin DIVA. We are creating a
+In this project we aim to create a deep-learning synthesizer programmer using the vst plugin DIVA. We are creating a
 tool that addresses the challenge of programming sound synthesizers. This requires a thorough technical understanding as
 software synthesizers often have many parameters. To tackle this, we built a deep learning model for automatic
 synthesizer programming that takes a target sound as input, predicts the parameter settings for the synthesizer that
