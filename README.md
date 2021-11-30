@@ -40,8 +40,6 @@ The folder 'dataset_11params/audio' contains 50 test sounds.
 We generated and saved datasets for training and validating deep learning models. Additionally, we created a small audio
 dataset for evaluation. These datasets can be downloaded from [Zenodo](https://doi.org/10.5281/zenodo.5552272).
 
-] and saved in the data folder.
-
 Diva has 281 parameters for controlling different operators and other global options that can be arranged in various
 ways to create complex sounds. For our currently best performing model we focused on a subset of 11 of these parameters, and we have overridden
 the other parameters using the settings taken from the standard DIVA MS-REV1 preset. For another experiment, one could focus on a different subset of parameters.
